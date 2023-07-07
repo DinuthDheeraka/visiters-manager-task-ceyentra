@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -24,6 +26,13 @@ public class Floor {
 
     @Column(name = "floor_name")
     String floorName;
+
+    @OneToMany(
+            mappedBy = "floor",
+            cascade = {
+            CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    List<Visit> visitList;
 
     public Floor(String floorNumber, String floorName) {
         this.floorNumber = floorNumber;
