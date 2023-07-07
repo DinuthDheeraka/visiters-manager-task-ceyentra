@@ -4,12 +4,10 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
-import com.ceyentra.springboot.visitersmanager.enums.entity.role.SystemUserRole;
+import com.ceyentra.springboot.visitersmanager.enums.entity.role.SystemUserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,10 +17,13 @@ public class SystemUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    int systemUserId;
+
     @Column(name = "user_name")
     String userName;
 
-    @Column(name = "pw")
+    @Column(name = "password")
     String password;
 
     @Column(name = "active")
@@ -31,26 +32,28 @@ public class SystemUser {
     @Column(name = "email")
     String email;
 
-    @Column(name = "user_role")
-    SystemUserRole systemUserRole;
+    @Column(name = "user_type")
+    SystemUserType systemUserType;
 
 
     public SystemUser(String userName, String password,
-                      int active, String email, SystemUserRole systemUserRole) {
+                      int active, String email, SystemUserType systemUserType) {
         this.userName = userName;
         this.password = password;
         this.active = active;
         this.email = email;
-        this.systemUserRole = systemUserRole;
+        this.systemUserType = systemUserType;
     }
 
     @Override
     public String toString() {
         return "SystemUser{" +
-                "userName='" + userName + '\'' +
+                "systemUserId=" + systemUserId +
+                ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", active=" + active +
                 ", email='" + email + '\'' +
+                ", systemUserType=" + systemUserType +
                 '}';
     }
 }

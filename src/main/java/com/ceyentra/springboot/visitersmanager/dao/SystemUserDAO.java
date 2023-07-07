@@ -5,5 +5,5 @@ import jdk.jfr.Registered;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Registered
-public interface SystemUserDAO extends JpaRepository<SystemUser, String> {
+public interface SystemUserDAO extends JpaRepository<SystemUser, Integer> {
 }
