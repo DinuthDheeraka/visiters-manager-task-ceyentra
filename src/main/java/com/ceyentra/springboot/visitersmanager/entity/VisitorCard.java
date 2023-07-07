@@ -29,6 +29,13 @@ public class VisitorCard {
     @Column(name = "card_status")
     VisitorCardStatus visitorCardStatus;
 
+    public VisitorCard(String cardNumber, String cardType,
+                       VisitorCardStatus visitorCardStatus) {
+        this.cardNumber = cardNumber;
+        this.cardType = cardType;
+        this.visitorCardStatus = visitorCardStatus;
+    }
+
     @Override
     public String toString() {
         return "VisitorCard{" +

@@ -31,6 +31,14 @@ public class Visitor {
     @Column(name = "phone")
     String phone;
 
+    public Visitor(String nic, String firstName,
+                   String lastName, String phone) {
+        this.nic = nic;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "Visitor{" +
