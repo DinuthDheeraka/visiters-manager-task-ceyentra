@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -28,6 +30,12 @@ public class VisitorCard {
 
     @Column(name = "card_status")
     VisitorCardStatus visitorCardStatus;
+
+    @OneToMany(mappedBy = "visitorCard",
+            cascade = {
+                    CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH})
+    List<Visit> visitList;
 
     public VisitorCard(String cardNumber, String cardType,
                        VisitorCardStatus visitorCardStatus) {
