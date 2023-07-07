@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,5 +23,5 @@ public class VisitorCard {
     String cardType;
 
     @Column(name = "card_status")
-    String cardStatus;
+    VisitorCardStatus visitorCardStatus;
 }
