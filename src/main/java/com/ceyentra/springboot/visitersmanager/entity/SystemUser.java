@@ -33,11 +33,11 @@ public class SystemUser {
     String email;
 
     @Column(name = "user_type")
-    SystemUserType systemUserType;
+    String systemUserType;
 
 
     public SystemUser(String userName, String password,
-                      int active, String email, SystemUserType systemUserType) {
+                      int active, String email, String systemUserType) {
         this.userName = userName;
         this.password = password;
         this.active = active;

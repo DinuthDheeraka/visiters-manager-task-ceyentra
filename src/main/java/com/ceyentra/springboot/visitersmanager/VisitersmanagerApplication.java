@@ -20,6 +20,10 @@ public class VisitersmanagerApplication {
 	public CommandLineRunner commandLineRunner(SystemUserDAO systemUserDAO){
 
 		return runner -> {
+			systemUserDAO.save(new SystemUser(
+					"Ten","{noop}1010",
+					1,"ten@gmail.com", SystemUserType.ROLE_ADMIN.name()
+			));
 		};
 	}
 }

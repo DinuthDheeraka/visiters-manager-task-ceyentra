@@ -6,6 +6,9 @@ package com.ceyentra.springboot.visitersmanager.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 
@@ -21,12 +24,12 @@ public class LoginSecurityConfig {
 
         //query to retrieve user by user name * regular sql
         jdbcUserDetailsManager.setUsersByUsernameQuery(
-                "select user_name,pw,active from user where user_name=?"
+                "select user_name,password,active from user where user_name=?"
         );
 
         //query to retrieve role by given user name * regular sql
-        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("" +
-                "select user_name,user_role from user where user_name=?"
+        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
+                "select user_name,user_type from user where user_name=?"
         );
         return jdbcUserDetailsManager;
     }
