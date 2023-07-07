@@ -20,7 +20,6 @@ public class VisitersmanagerApplication {
 	public CommandLineRunner commandLineRunner(SystemUserDAO systemUserDAO){
 
 		return runner -> {
-			System.out.println(systemUserDAO.findById(1));
 		};
 	}
 }
