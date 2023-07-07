@@ -5,7 +5,11 @@
 package com.ceyentra.springboot.visitersmanager.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "visitor")
 public class Visitor {
@@ -26,4 +30,15 @@ public class Visitor {
 
     @Column(name = "phone")
     String phone;
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "visitorId=" + visitorId +
+                ", nic='" + nic + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }

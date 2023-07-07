@@ -6,7 +6,11 @@ package com.ceyentra.springboot.visitersmanager.entity;
 
 import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "visitor_card")
 public class VisitorCard {
@@ -24,4 +28,14 @@ public class VisitorCard {
 
     @Column(name = "card_status")
     VisitorCardStatus visitorCardStatus;
+
+    @Override
+    public String toString() {
+        return "VisitorCard{" +
+                "cardId=" + cardId +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", cardType='" + cardType + '\'' +
+                ", visitorCardStatus=" + visitorCardStatus +
+                '}';
+    }
 }

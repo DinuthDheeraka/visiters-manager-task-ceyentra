@@ -5,7 +5,11 @@
 package com.ceyentra.springboot.visitersmanager.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "floor")
 public class Floor {
@@ -20,4 +24,13 @@ public class Floor {
 
     @Column(name = "floor_name")
     String floorName;
+
+    @Override
+    public String toString() {
+        return "Floor{" +
+                "floorId=" + floorId +
+                ", floorNumber='" + floorNumber + '\'' +
+                ", floorName='" + floorName + '\'' +
+                '}';
+    }
 }
