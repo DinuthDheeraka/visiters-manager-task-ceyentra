@@ -23,15 +23,21 @@ public class Visit {
     @Column(name = "visit_id")
     int visitId;
 
-    @ManyToOne
+    @ManyToOne(cascade = {
+            CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "visitor_id")
     Visitor visitor;
 
-    @ManyToOne
+    @ManyToOne(cascade = {
+            CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "visit_card_id")
     VisitorCard visitorCard;
 
-    @ManyToOne
+    @ManyToOne(cascade = {
+            CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "floor_id")
     Floor floor;
 
