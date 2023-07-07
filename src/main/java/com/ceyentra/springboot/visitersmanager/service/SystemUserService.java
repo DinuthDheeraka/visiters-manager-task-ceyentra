@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface SystemUserService {
 
-    SystemUserDTO saveSystemUser();
+    SystemUserDTO saveSystemUser(SystemUserDTO systemUserDTO);
 
-    SystemUserDTO updateSystemUser();
+    SystemUserDTO updateSystemUser(SystemUserDTO systemUserDTO);
 
     SystemUserDTO deleteSystemUserById(int id);
 
