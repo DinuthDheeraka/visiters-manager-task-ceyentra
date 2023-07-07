@@ -26,7 +26,7 @@ public class LoginSecurityConfig {
 
         //query to retrieve role by given user name * regular sql
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("" +
-                "select user_id,role from role where user_id=?"
+                "select user_name,user_role from user where user_name=?"
         );
         return jdbcUserDetailsManager;
     }

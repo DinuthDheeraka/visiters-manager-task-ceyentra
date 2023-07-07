@@ -1,5 +1,5 @@
 package com.ceyentra.springboot.visitersmanager.enums.entity.role;
 
-public enum SystemUserType {
+public enum SystemUserRole {
     ROLE_ADMIN,ROLE_RECEPTIONIST
 }

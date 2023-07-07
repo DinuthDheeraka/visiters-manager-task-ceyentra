@@ -4,10 +4,15 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.entity.role.SystemUserRole;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class SystemUser {
@@ -26,10 +31,26 @@ public class SystemUser {
     @Column(name = "email")
     String email;
 
-    @OneToMany(
-            mappedBy = "systemUser",
-            cascade = {
-                    CascadeType.DETACH, CascadeType.MERGE,
-                    CascadeType.PERSIST, CascadeType.REFRESH})
-    List<SystemUserRole> roleList;
+    @Column(name = "user_role")
+    SystemUserRole systemUserRole;
+
+
+    public SystemUser(String userName, String password,
+                      int active, String email, SystemUserRole systemUserRole) {
+        this.userName = userName;
+        this.password = password;
+        this.active = active;
+        this.email = email;
+        this.systemUserRole = systemUserRole;
+    }
+
+    @Override
+    public String toString() {
+        return "SystemUser{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
