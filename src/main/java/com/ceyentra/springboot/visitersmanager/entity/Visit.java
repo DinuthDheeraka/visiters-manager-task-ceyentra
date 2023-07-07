@@ -22,14 +22,17 @@ public class Visit {
     @Column(name = "visit_id")
     int visitId;
 
-    @Column(name = "visitor_id")
-    int visitorId;
+    @ManyToOne
+    @JoinColumn(name = "visitor_id")
+    Visitor visitor;
 
-    @Column(name = "visit_card_id")
-    int visitCardId;
+    @ManyToOne
+    @JoinColumn(name = "visit_card_id")
+    VisitorCard visitorCard;
 
-    @Column(name = "floor_id")
-    int floorId;
+    @ManyToOne
+    @JoinColumn(name = "floor_id")
+    Floor floor;
 
     @Column(name = "check_in_date")
     LocalDate checkInDate;
@@ -44,20 +47,6 @@ public class Visit {
     String reason;
 
     @Column(name = "status")
-    String status;
+    String visitStatus;
 
-    @Override
-    public String toString() {
-        return "Visit{" +
-                "visitId=" + visitId +
-                ", visitorId=" + visitorId +
-                ", visitCardId=" + visitCardId +
-                ", floorId=" + floorId +
-                ", checkInDate=" + checkInDate +
-                ", checkInTime=" + checkInTime +
-                ", checkOutTime=" + checkOutTime +
-                ", reason='" + reason + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
 }

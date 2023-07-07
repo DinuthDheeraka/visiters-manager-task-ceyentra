@@ -25,6 +25,11 @@ public class Floor {
     @Column(name = "floor_name")
     String floorName;
 
+    public Floor(String floorNumber, String floorName) {
+        this.floorNumber = floorNumber;
+        this.floorName = floorName;
+    }
+
     @Override
     public String toString() {
         return "Floor{" +
