@@ -30,8 +30,8 @@ public class Floor {
     @OneToMany(
             mappedBy = "floor",
             cascade = {
-            CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+                    CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH})
     List<Visit> visitList;
 
     public Floor(String floorNumber, String floorName) {

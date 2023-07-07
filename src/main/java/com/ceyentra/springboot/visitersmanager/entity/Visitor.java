@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -30,6 +32,13 @@ public class Visitor {
 
     @Column(name = "phone")
     String phone;
+
+    @OneToMany(
+            mappedBy = "visitor",
+            cascade = {
+                    CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH})
+    List<Visit> visitList;
 
     public Visitor(String nic, String firstName,
                    String lastName, String phone) {
