@@ -6,6 +6,8 @@ package com.ceyentra.springboot.visitersmanager.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 public class SystemUser {
@@ -23,4 +25,11 @@ public class SystemUser {
 
     @Column(name = "email")
     String email;
+
+    @OneToMany(
+            mappedBy = "systemUser",
+            cascade = {
+                    CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH})
+    List<SystemUserRole> roleList;
 }

@@ -9,13 +9,14 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "role")
-public class Role {
+public class SystemUserRole {
 
     @Id
     @JoinColumn(name = "user_id")
-    @ManyToOne(cascade = {
-            CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(
+            cascade = {
+                    CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH})
     SystemUser systemUser;
 
     @Id
