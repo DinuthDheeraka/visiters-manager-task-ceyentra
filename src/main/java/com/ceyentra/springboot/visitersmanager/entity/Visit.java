@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,27 @@ public class Visit {
     String reason;
 
     @Column(name = "status")
-    String visitStatus;
+    VisitStatus visitStatus;
 
+    public Visit(LocalDate checkInDate, LocalTime checkInTime,
+                 LocalTime checkOutTime, String reason,
+                 VisitStatus visitStatus) {
+        this.checkInDate = checkInDate;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+        this.reason = reason;
+        this.visitStatus = visitStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Visit{" +
+                "visitId=" + visitId +
+                ", checkInDate=" + checkInDate +
+                ", checkInTime=" + checkInTime +
+                ", checkOutTime=" + checkOutTime +
+                ", reason='" + reason + '\'' +
+                ", visitStatus=" + visitStatus +
+                '}';
+    }
 }
