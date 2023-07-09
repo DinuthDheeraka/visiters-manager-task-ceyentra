@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,17 +41,24 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public SystemUserDTO updateSystemUser(SystemUserDTO systemUserDTO) {
-        return null;
+        SystemUser save = systemUserDAO.save(modelMapper.map(systemUserDTO, SystemUser.class));
+        return modelMapper.map(save,SystemUserDTO.class);
     }
 
     @Override
-    public SystemUserDTO deleteSystemUserById(int id) {
-        return null;
+    public String deleteSystemUserById(int id) {
+        Optional<SystemUser> byId = systemUserDAO.findById(id);
+        if(byId.isPresent()){
+            systemUserDAO.deleteById(id);
+            return "deleted user - "+id;
+        }
+        return "unable to find user - "+id;
     }
 
     @Override
     public SystemUserDTO readSystemUserById(int id) {
-        return null;
+        Optional<SystemUser> byId = systemUserDAO.findById(id);
+        return modelMapper.map(byId.get(),SystemUserDTO.class);
     }
 
     @Override

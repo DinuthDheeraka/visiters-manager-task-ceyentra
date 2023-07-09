@@ -5,7 +5,6 @@
 package com.ceyentra.springboot.visitersmanager.rest;
 
 import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

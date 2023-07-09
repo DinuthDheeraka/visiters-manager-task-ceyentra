@@ -7,9 +7,8 @@ package com.ceyentra.springboot.visitersmanager.rest;
 import com.ceyentra.springboot.visitersmanager.dto.entity.SystemUserDTO;
 import com.ceyentra.springboot.visitersmanager.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,4 +32,30 @@ public class SystemUserRestController {
     public List<SystemUserDTO> getAllSystemUsers() {
         return systemUserService.readAllSystemUsers();
     }
+
+    @GetMapping("v1/{id}")
+    public SystemUserDTO getSystemUserById(@PathVariable int id) {
+        return systemUserService.readSystemUserById(id);
+    }
+
+    @PostMapping("/v1")
+    public SystemUserDTO addSystemUser(@RequestBody SystemUserDTO systemUserDTO){
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
+
+        systemUserDTO.setPassword("{bcrypt}"+hashedPassword);
+        return systemUserService.saveSystemUser(systemUserDTO);
+    }
+
+    @PutMapping("/v1")
+    public SystemUserDTO updateSystemUser(@RequestBody SystemUserDTO systemUserDTO){
+        return systemUserService.updateSystemUser(systemUserDTO);
+    }
+
+    @DeleteMapping("v1/{id}")
+    public String updateSystemUser(@PathVariable int id){
+        return systemUserService.deleteSystemUserById(id);
+    }
+
 }

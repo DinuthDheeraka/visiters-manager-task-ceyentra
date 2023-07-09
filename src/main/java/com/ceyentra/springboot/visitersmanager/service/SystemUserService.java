@@ -10,7 +10,7 @@ public interface SystemUserService {
 
     SystemUserDTO updateSystemUser(SystemUserDTO systemUserDTO);
 
-    SystemUserDTO deleteSystemUserById(int id);
+    String deleteSystemUserById(int id);
 
     SystemUserDTO readSystemUserById(int id);
 
