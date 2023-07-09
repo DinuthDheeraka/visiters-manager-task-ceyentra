@@ -24,7 +24,12 @@ public class SystemUserRestController {
         this.systemUserService = systemUserService;
     }
 
-    @GetMapping
+    @GetMapping("/v2")
+    public String def(){
+        return "def";
+    }
+
+    @GetMapping("/v1")
     public List<SystemUserDTO> getAllSystemUsers() {
         return systemUserService.readAllSystemUsers();
     }

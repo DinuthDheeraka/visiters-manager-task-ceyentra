@@ -46,7 +46,8 @@ public class AuthorizationSecurityConfig {
 
         http.authorizeHttpRequests(configurer ->
                 configurer
-                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/v2/**").hasAnyRole("ADMIN","RECEPTIONIST")
+                        .requestMatchers(HttpMethod.GET, "/users/v1/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http.httpBasic(Customizer.withDefaults());

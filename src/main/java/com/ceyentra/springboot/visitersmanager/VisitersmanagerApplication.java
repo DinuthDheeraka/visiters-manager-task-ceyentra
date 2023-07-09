@@ -1,12 +1,17 @@
 package com.ceyentra.springboot.visitersmanager;
 
 import com.ceyentra.springboot.visitersmanager.dao.SystemUserDAO;
+import com.ceyentra.springboot.visitersmanager.dao.VisitDAO;
+import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
 import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
+import com.ceyentra.springboot.visitersmanager.entity.Visitor;
 import com.ceyentra.springboot.visitersmanager.enums.entity.role.SystemUserType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Optional;
 
 @SpringBootApplication
 public class VisitersmanagerApplication {
@@ -17,13 +22,10 @@ public class VisitersmanagerApplication {
 
 
 	@Bean
-	public CommandLineRunner commandLineRunner(SystemUserDAO systemUserDAO){
+	public CommandLineRunner commandLineRunner(VisitDAO visitDAO,VisitorDAO visitorDAO){
 
 		return runner -> {
-			systemUserDAO.save(new SystemUser(
-					"Ten","{noop}1010",
-					1,"ten@gmail.com", SystemUserType.ROLE_ADMIN.name()
-			));
+			System.out.println(visitDAO.findVisitByVisitorId(1).get(0).getFloor());
 		};
 	}
 }
