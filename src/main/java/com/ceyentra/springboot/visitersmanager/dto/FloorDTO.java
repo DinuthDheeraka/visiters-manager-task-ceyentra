@@ -1,10 +1,9 @@
 /**
  * @author :  Dinuth Dheeraka
- * Created : 7/9/2023 6:54 PM
+ * Created : 7/9/2023 7:00 PM
  */
 package com.ceyentra.springboot.visitersmanager.dto;
 
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,20 +12,16 @@ import lombok.ToString;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-public class VisitorDTO {
+public class FloorDTO {
 
-    int visitorId;
+    int floorId;
 
-    String nic;
+    String floorNumber;
 
-    String firstName;
-
-    String lastName;
-
-    String phone;
+    String floorName;
 
     List<VisitDTO> visitList;
 }
