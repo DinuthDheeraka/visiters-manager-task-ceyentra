@@ -5,12 +5,9 @@
 package com.ceyentra.springboot.visitersmanager.rest;
 
 import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visitor;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +25,10 @@ public class VisitorRestController {
     @GetMapping
     public List<VisitorDTO> getAllVisitors() {
         return visitorService.readAllVisitors();
+    }
+
+    @PostMapping
+    public VisitorDTO addVisitor(@RequestBody VisitorDTO visitorDTO) {
+        return visitorService.saveVisitor(visitorDTO);
     }
 }

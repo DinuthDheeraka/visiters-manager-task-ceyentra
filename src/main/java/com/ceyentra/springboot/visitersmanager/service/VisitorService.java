@@ -8,4 +8,6 @@ import java.util.List;
 public interface VisitorService {
 
     List<VisitorDTO> readAllVisitors();
+
+    VisitorDTO saveVisitor(VisitorDTO visitorDTO);
 }

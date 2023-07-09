@@ -7,6 +7,9 @@ package com.ceyentra.springboot.visitersmanager.service.impl;
 import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
 import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
+import com.ceyentra.springboot.visitersmanager.entity.Visit;
+import com.ceyentra.springboot.visitersmanager.entity.Visitor;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -36,5 +39,12 @@ public class VisitorServiceImpl implements VisitorService {
         return modelMapper.map(visitorDAO.findAll(),
                 new TypeToken<ArrayList<VisitorDTO>>() {
                 }.getType());
+    }
+
+    @Override
+    public VisitorDTO saveVisitor(VisitorDTO visitorDTO) {
+        visitorDTO.setVisitorId(0);
+        Visitor save = visitorDAO.save(modelMapper.map(visitorDTO, Visitor.class));
+        return modelMapper.map(save, VisitorDTO.class);
     }
 }
