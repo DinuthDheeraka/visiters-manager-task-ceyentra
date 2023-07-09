@@ -27,6 +27,4 @@ public class VisitorDTO {
     String lastName;
 
     String phone;
-
-    List<VisitDTO> visitList;
 }
