@@ -18,18 +18,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class VisitDTO {
 
     int visitId;
 
-    Visitor visitor;
+    VisitorDTO visitor;
 
-    VisitorCard visitorCard;
+    VisitorCardDTO visitorCard;
 
-    Floor floor;
+    FloorDTO floor;
 
     LocalDate checkInDate;
 
@@ -40,4 +39,15 @@ public class VisitDTO {
     String reason;
 
     VisitStatus visitStatus;
+
+    public VisitDTO(int visitId, LocalDate checkInDate,
+                    LocalTime checkInTime, LocalTime checkOutTime,
+                    String reason, VisitStatus visitStatus) {
+        this.visitId = visitId;
+        this.checkInDate = checkInDate;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+        this.reason = reason;
+        this.visitStatus = visitStatus;
+    }
 }

@@ -12,7 +12,6 @@ import lombok.ToString;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class FloorDTO {
@@ -24,4 +23,10 @@ public class FloorDTO {
     String floorName;
 
     List<VisitDTO> visitList;
+
+    public FloorDTO(int floorId, String floorNumber, String floorName) {
+        this.floorId = floorId;
+        this.floorNumber = floorNumber;
+        this.floorName = floorName;
+    }
 }
