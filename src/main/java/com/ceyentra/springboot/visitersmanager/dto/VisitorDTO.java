@@ -4,13 +4,10 @@
  */
 package com.ceyentra.springboot.visitersmanager.dto;
 
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

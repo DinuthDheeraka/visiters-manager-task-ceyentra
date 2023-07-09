@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,5 +47,21 @@ public class VisitorServiceImpl implements VisitorService {
         visitorDTO.setVisitorId(0);
         Visitor save = visitorDAO.save(modelMapper.map(visitorDTO, Visitor.class));
         return modelMapper.map(save, VisitorDTO.class);
+    }
+
+    @Override
+    public VisitorDTO updateVisitor(VisitorDTO visitorDTO) {
+        Visitor save = visitorDAO.save(modelMapper.map(visitorDTO, Visitor.class));
+        return modelMapper.map(save,VisitorDTO.class);
+    }
+
+    @Override
+    public String deleteVisitorById(int id) {
+        Optional<Visitor> byId = visitorDAO.findById(id);
+        if(byId.isPresent()){
+            visitorDAO.deleteById(id);
+            return "deleted visitor - "+id;
+        }
+        return "unable to delete.visitor not found";
     }
 }

@@ -31,4 +31,15 @@ public class VisitorRestController {
     public VisitorDTO addVisitor(@RequestBody VisitorDTO visitorDTO) {
         return visitorService.saveVisitor(visitorDTO);
     }
+
+    @PutMapping
+    public VisitorDTO updateVisitor(@RequestBody VisitorDTO visitorDTO) {
+        return visitorService.updateVisitor(visitorDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteVisitor(@PathVariable int id){
+        return visitorService.deleteVisitorById(id);
+    }
+
 }
