@@ -25,7 +25,6 @@ public class VisitersmanagerApplication {
 	public CommandLineRunner commandLineRunner(VisitDAO visitDAO,VisitorDAO visitorDAO){
 
 		return runner -> {
-			System.out.println(visitDAO.findVisitByVisitorId(1).get(0).getFloor());
 		};
 	}
 }

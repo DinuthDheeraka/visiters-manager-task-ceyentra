@@ -4,18 +4,18 @@
  */
 package com.ceyentra.springboot.visitersmanager.rest;
 
-import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
+import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
 import com.ceyentra.springboot.visitersmanager.entity.Visitor;
-import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
+import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
+import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
+import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/visit")
@@ -23,8 +23,10 @@ public class VisitRestController {
 
     private VisitService visitService;
 
+
     @Autowired
     public VisitRestController(VisitService visitService) {
+
         this.visitService = visitService;
     }
 
@@ -35,7 +37,7 @@ public class VisitRestController {
     }
 
     @PostMapping
-    public VisitDTO addVisit(@RequestBody VisitDTO visitDTO){
-        visitService.saveVisit(visitDTO);
+    public VisitDTO addVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO){
+        return null;
     }
 }

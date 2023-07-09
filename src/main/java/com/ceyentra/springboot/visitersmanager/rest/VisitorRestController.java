@@ -4,7 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.rest;
 
-import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,11 @@ public class VisitorRestController {
     @GetMapping
     public List<VisitorDTO> getAllVisitors() {
         return visitorService.readAllVisitors();
+    }
+
+    @GetMapping("/{id}")
+    public VisitorDTO getAllVisitors(@PathVariable int id) {
+        return visitorService.readVisitorById(id);
     }
 
     @PostMapping

@@ -48,6 +48,14 @@ public class Visitor {
         this.phone = phone;
     }
 
+    public Visitor(int visitorId, String nic, String firstName, String lastName, String phone) {
+        this.visitorId = visitorId;
+        this.nic = nic;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "Visitor{" +

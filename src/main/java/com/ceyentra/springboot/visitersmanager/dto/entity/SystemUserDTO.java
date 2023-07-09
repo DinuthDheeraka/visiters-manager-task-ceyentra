@@ -2,7 +2,7 @@
  * @author :  Dinuth Dheeraka
  * Created : 7/8/2023 1:51 AM
  */
-package com.ceyentra.springboot.visitersmanager.dto;
+package com.ceyentra.springboot.visitersmanager.dto.entity;
 
 import com.ceyentra.springboot.visitersmanager.enums.entity.role.SystemUserType;
 import lombok.AllArgsConstructor;

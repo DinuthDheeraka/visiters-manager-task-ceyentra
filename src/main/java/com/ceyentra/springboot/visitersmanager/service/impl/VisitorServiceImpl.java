@@ -5,10 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
-import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
-import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.Visitor;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.modelmapper.ModelMapper;
@@ -63,5 +60,11 @@ public class VisitorServiceImpl implements VisitorService {
             return "deleted visitor - "+id;
         }
         return "unable to delete.visitor not found";
+    }
+
+    @Override
+    public VisitorDTO readVisitorById(int id) {
+        Optional<Visitor> byId = visitorDAO.findById(id);
+        return modelMapper.map(byId.get(),VisitorDTO.class);
     }
 }

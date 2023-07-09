@@ -2,9 +2,8 @@
  * @author :  Dinuth Dheeraka
  * Created : 7/9/2023 7:00 PM
  */
-package com.ceyentra.springboot.visitersmanager.dto;
+package com.ceyentra.springboot.visitersmanager.dto.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -21,8 +20,6 @@ public class FloorDTO {
     String floorNumber;
 
     String floorName;
-
-    List<VisitDTO> visitList;
 
     public FloorDTO(int floorId, String floorNumber, String floorName) {
         this.floorId = floorId;

@@ -4,7 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.rest;
 
-import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.SystemUserDTO;
 import com.ceyentra.springboot.visitersmanager.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

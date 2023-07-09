@@ -1,6 +1,6 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
-import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.SystemUserDTO;
 
 import java.util.List;
 

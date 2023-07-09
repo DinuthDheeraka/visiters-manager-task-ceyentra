@@ -39,6 +39,12 @@ public class Floor {
         this.floorName = floorName;
     }
 
+    public Floor(int floorId, String floorNumber, String floorName) {
+        this.floorId = floorId;
+        this.floorNumber = floorNumber;
+        this.floorName = floorName;
+    }
+
     @Override
     public String toString() {
         return "Floor{" +

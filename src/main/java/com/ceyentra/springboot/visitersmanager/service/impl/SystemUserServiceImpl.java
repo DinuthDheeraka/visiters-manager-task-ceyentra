@@ -5,7 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.dao.SystemUserDAO;
-import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.SystemUserDTO;
 import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
 import com.ceyentra.springboot.visitersmanager.service.SystemUserService;
 import org.modelmapper.ModelMapper;

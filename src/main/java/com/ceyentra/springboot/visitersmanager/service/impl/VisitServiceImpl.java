@@ -5,10 +5,10 @@
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.dao.VisitDAO;
-import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
-import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
-import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.Floor;
 import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import com.ceyentra.springboot.visitersmanager.entity.Visitor;
@@ -74,8 +74,6 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public VisitDTO saveVisit(VisitDTO visitDTO) {
-        visitDTO.setVisitId(0);
-        Visit save = visitDAO.save(modelMapper.map(visitDTO, Visit.class));
-        return modelMapper.map(save,VisitDTO.class);
+        return null;
     }
 }

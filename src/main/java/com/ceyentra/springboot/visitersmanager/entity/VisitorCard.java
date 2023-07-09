@@ -44,6 +44,13 @@ public class VisitorCard {
         this.visitorCardStatus = visitorCardStatus;
     }
 
+    public VisitorCard(int cardId, String cardNumber, String cardType, VisitorCardStatus visitorCardStatus) {
+        this.cardId = cardId;
+        this.cardNumber = cardNumber;
+        this.cardType = cardType;
+        this.visitorCardStatus = visitorCardStatus;
+    }
+
     @Override
     public String toString() {
         return "VisitorCard{" +

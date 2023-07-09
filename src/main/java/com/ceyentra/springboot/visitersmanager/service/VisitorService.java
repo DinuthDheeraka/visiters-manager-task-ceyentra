@@ -1,6 +1,6 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
-import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
 
 import java.util.List;
 
@@ -13,4 +13,6 @@ public interface VisitorService {
     VisitorDTO updateVisitor(VisitorDTO visitorDTO);
 
     String deleteVisitorById(int id);
+
+    VisitorDTO readVisitorById(int id);
 }
