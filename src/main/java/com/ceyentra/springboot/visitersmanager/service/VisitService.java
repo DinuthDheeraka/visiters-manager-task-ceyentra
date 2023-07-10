@@ -12,4 +12,6 @@ public interface VisitService {
     VisitDTO saveVisit(HttpRequestVisitDTO requestVisitDTO);
 
     VisitDTO readVisitById(int id);
+
+    VisitDTO updateVisitById(HttpRequestVisitDTO httpRequestVisitDTO);
 }

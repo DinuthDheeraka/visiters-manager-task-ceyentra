@@ -128,4 +128,17 @@ public class VisitServiceImpl implements VisitService {
         }
         return null;
     }
+
+    @Override
+    public VisitDTO updateVisitById(HttpRequestVisitDTO requestVisitDTO) {
+
+        visitDAO.updateVisit(
+                requestVisitDTO.getVisitId(),
+                requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
+                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate() ,
+                requestVisitDTO.getCheckInTime() ,requestVisitDTO.getCheckOutTime() ,
+                requestVisitDTO.getReason() , requestVisitDTO.getVisitStatus()
+        );
+        return null;
+    }
 }
