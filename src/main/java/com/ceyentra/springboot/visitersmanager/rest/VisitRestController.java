@@ -17,6 +17,8 @@ import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/visit")
 public class VisitRestController {
@@ -31,13 +33,14 @@ public class VisitRestController {
     }
 
     @GetMapping
-    public Object getAllVisits(){
+    public List<VisitDTO> getAllVisits(){
 
         return visitService.readAllVisits();
     }
 
     @PostMapping
     public VisitDTO addVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO){
+        visitService.saveVisit(requestVisitDTO);
         return null;
     }
 }

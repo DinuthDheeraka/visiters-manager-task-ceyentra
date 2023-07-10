@@ -9,11 +9,17 @@ import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
 import com.ceyentra.springboot.visitersmanager.entity.Floor;
 import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import com.ceyentra.springboot.visitersmanager.entity.Visitor;
 import com.ceyentra.springboot.visitersmanager.entity.VisitorCard;
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
+import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
+import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
+import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +34,23 @@ public class VisitServiceImpl implements VisitService {
 
     private final VisitDAO visitDAO;
 
+    private final VisitorCardService visitorCardService;
+
+    private final VisitorService visitorService;
+
+    private final FloorService floorService;
+
     private final ModelMapper modelMapper;
 
     @Autowired
-    public VisitServiceImpl(VisitDAO visitDAO, ModelMapper modelMapper) {
+    public VisitServiceImpl(VisitDAO visitDAO, VisitorCardService visitorCardService,
+                            VisitorService visitorService, FloorService floorService ,
+                            ModelMapper modelMapper) {
         this.visitDAO = visitDAO;
+        this.visitorCardService = visitorCardService;
         this.modelMapper = modelMapper;
+        this.visitorService = visitorService;
+        this.floorService = floorService;
     }
 
     @Override
@@ -73,7 +90,21 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public VisitDTO saveVisit(VisitDTO visitDTO) {
-        return null;
+    @Transactional
+    public VisitDTO saveVisit(HttpRequestVisitDTO requestVisitDTO) {
+        //add visit
+        visitDAO.saveVisit(
+                requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
+                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate() ,
+                requestVisitDTO.getCheckInTime() ,requestVisitDTO.getCheckOutTime() ,
+                requestVisitDTO.getReason() , VisitStatus.CHECKED_IN.ordinal()
+        );
+
+        //update card status
+        VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(requestVisitDTO.getVisitorCardId());
+        visitorCardDTO.setVisitorCardStatus(VisitorCardStatus.IN_USE);
+        visitorCardService.updateVisitorCard(visitorCardDTO);
+
+        return new VisitDTO();
     }
 }
