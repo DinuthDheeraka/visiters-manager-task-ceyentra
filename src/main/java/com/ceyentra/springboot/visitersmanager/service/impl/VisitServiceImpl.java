@@ -62,24 +62,14 @@ public class VisitServiceImpl implements VisitService {
                     visit.getCheckInTime(),visit.getCheckOutTime(),
                     visit.getReason(),visit.getVisitStatus());
 
-            //visitor
-            Visitor visitor = visit.getVisitor();
-            VisitorDTO visitorDTO = new VisitorDTO(visitor.getVisitorId(),
-                    visitor.getNic(), visitor.getFirstName(), visitor.getLastName(),
-                    visitor.getPhone());
+            //visitorDTO
+            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(),VisitorDTO.class);
 
-            //visit card
-            VisitorCard visitorCard = visit.getVisitorCard();
-            VisitorCardDTO visitorCardDTO = new VisitorCardDTO(
-                    visitorCard.getCardId(),visitorCard.getCardNumber(),
-                    visitorCard.getCardType(),visitorCard.getVisitorCardStatus()
-            );
+            //visitorCardDTO
+            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(),VisitorCardDTO.class);
 
-            //floor
-            Floor floor = visit.getFloor();
-            FloorDTO floorDTO = new FloorDTO(
-                    floor.getFloorId(), floor.getFloorNumber(), floor.getFloorName()
-            );
+            //floorDTO
+            FloorDTO floorDTO = modelMapper.map(visit.getFloor(),FloorDTO.class);
 
             visitDTO.setVisitor(visitorDTO);
             visitDTO.setVisitorCard(visitorCardDTO);
