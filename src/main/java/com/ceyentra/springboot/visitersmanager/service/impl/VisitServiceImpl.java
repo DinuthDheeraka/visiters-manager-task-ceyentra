@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -106,5 +107,35 @@ public class VisitServiceImpl implements VisitService {
         visitorCardService.updateVisitorCard(visitorCardDTO);
 
         return new VisitDTO();
+    }
+
+    @Override
+    public VisitDTO readVisitById(int id) {
+        Optional<Visit> byId = visitDAO.findById(id);
+        if(byId.isPresent()){
+            Visit visit = byId.get();
+
+            //visit dto
+            VisitDTO visitDTO = new VisitDTO(
+                    visit.getVisitId(), visit.getCheckInDate(),
+                    visit.getCheckInTime(),visit.getCheckOutTime(),
+                    visit.getReason(),visit.getVisitStatus());
+
+            //visitorDTO
+            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(),VisitorDTO.class);
+
+            //visitorCardDTO
+            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(),VisitorCardDTO.class);
+
+            //floorDTO
+            FloorDTO floorDTO = modelMapper.map(visit.getFloor(),FloorDTO.class);
+
+            visitDTO.setVisitor(visitorDTO);
+            visitDTO.setFloor(floorDTO);
+            visitDTO.setVisitorCard(visitorCardDTO);
+
+            return visitDTO;
+        }
+        return null;
     }
 }

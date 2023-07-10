@@ -34,8 +34,12 @@ public class VisitRestController {
 
     @GetMapping
     public List<VisitDTO> getAllVisits(){
-
         return visitService.readAllVisits();
+    }
+
+    @GetMapping("/{id}")
+    public VisitDTO getVisitById(@PathVariable int id){
+        return visitService.readVisitById(id);
     }
 
     @PostMapping

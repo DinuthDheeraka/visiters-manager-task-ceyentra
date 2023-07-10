@@ -10,4 +10,6 @@ public interface VisitService {
     List<VisitDTO> readAllVisits();
 
     VisitDTO saveVisit(HttpRequestVisitDTO requestVisitDTO);
+
+    VisitDTO readVisitById(int id);
 }
