@@ -19,4 +19,12 @@ public class VisitersmanagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VisitersmanagerApplication.class, args);
 	}
+
+	@Bean
+	public CommandLineRunner commandLineRunner(VisitDAO visitDAO){
+
+		return args -> {
+//			System.out.println(visitDAO.findLastVisit().getVisitor());
+		};
+	}
 }

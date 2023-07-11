@@ -92,7 +92,7 @@ public class VisitServiceImpl implements VisitService {
     @Transactional
     public VisitDTO saveVisit(HttpRequestVisitDTO requestVisitDTO) {
         //add visit
-        visitDAO.saveVisit(
+         visitDAO.saveVisit(
                 requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
                 requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate(),
                 requestVisitDTO.getCheckInTime(), requestVisitDTO.getCheckOutTime(),
@@ -104,7 +104,7 @@ public class VisitServiceImpl implements VisitService {
         visitorCardDTO.setVisitorCardStatus(VisitorCardStatus.IN_USE);
         visitorCardService.updateVisitorCard(visitorCardDTO);
 
-        return new VisitDTO();
+        return null;
     }
 
     @Override

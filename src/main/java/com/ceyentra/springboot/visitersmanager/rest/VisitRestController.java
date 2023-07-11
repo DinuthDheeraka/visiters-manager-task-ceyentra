@@ -6,10 +6,12 @@ package com.ceyentra.springboot.visitersmanager.rest;
 
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
+import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,40 +31,57 @@ public class VisitRestController {
     }
 
     @GetMapping
-    public List<VisitDTO> getAllVisits() {
+    public ResponseEntity<ResponseUtil<List<VisitDTO>>> getAllVisits() {
 
         Optional<List<VisitDTO>> visitDTOList = Optional.ofNullable(visitService.readAllVisits());
 
-        if(visitDTOList.isEmpty()){
+        if (visitDTOList.isEmpty()) {
             throw new VisitNotFoundException("couldn't find visits");
         }
 
-        return visitDTOList.get();
-
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(), "successfully retrieved visits",
+                visitDTOList.get()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public VisitDTO getVisitById(@PathVariable int id) {
+    public ResponseEntity<ResponseUtil<VisitDTO>> getVisitById(@PathVariable int id) {
 
         Optional<VisitDTO> optionalVisitDTO = Optional.ofNullable(visitService.readVisitById(id));
 
-        if(optionalVisitDTO.isEmpty()){
-            throw new VisitNotFoundException("couldn't find visit - "+id);
+        if (optionalVisitDTO.isEmpty()) {
+            throw new VisitNotFoundException("couldn't find visit - " + id);
         }
 
-        return optionalVisitDTO.get();
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(), "successfully retrieved visit -" + id,
+                optionalVisitDTO.get()),
+                HttpStatus.OK);
     }
 
     @PostMapping
-    public VisitDTO addVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
+    public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
         visitService.saveVisit(requestVisitDTO);
-        return null;
+        return new ResponseEntity<>(
+                new ResponseUtil<>(
+                        HttpStatus.CREATED.value(),
+                        "successfully saved visit details",
+                        "success"
+                ),
+                HttpStatus.CREATED);
     }
 
     @PutMapping
-    public VisitDTO updateVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
+    public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
         visitService.updateVisitById(requestVisitDTO);
-        return null;
+        return new ResponseEntity<>(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(),
+                        "successfully updated visit details",
+                        "success"
+                ),
+                HttpStatus.OK);
     }
 }
 
