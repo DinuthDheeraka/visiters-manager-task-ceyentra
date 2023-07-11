@@ -99,6 +99,9 @@ public class VisitServiceImpl implements VisitService {
                 requestVisitDTO.getReason(), VisitStatus.CHECKED_IN.ordinal()
         );
 
+         //check card availability
+
+
         //update card status
         VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(requestVisitDTO.getVisitorCardId());
         visitorCardDTO.setVisitorCardStatus(VisitorCardStatus.IN_USE);

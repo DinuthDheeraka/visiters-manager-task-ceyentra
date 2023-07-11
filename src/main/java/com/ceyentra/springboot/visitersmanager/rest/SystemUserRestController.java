@@ -94,7 +94,7 @@ public class SystemUserRestController {
     }
 
     @DeleteMapping("v1/{id}")
-    public String deleteSystemUser(@PathVariable int id) {
+    public ResponseEntity<ResponseUtil<String>> deleteSystemUser(@PathVariable int id) {
 
         Optional<String> optional = Optional.ofNullable(systemUserService.deleteSystemUserById(id));
 
@@ -102,7 +102,12 @@ public class SystemUserRestController {
             throw new SystemUserNotFoundException("couldn't find system user -" + id);
         }
 
-        return optional.get();
+        return new ResponseEntity<>(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(),
+                        "successfully deleted system user",
+                        optional.get()),
+                HttpStatus.OK);
     }
 
 }

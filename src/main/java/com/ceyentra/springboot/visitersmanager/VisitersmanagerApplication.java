@@ -2,6 +2,7 @@ package com.ceyentra.springboot.visitersmanager;
 
 import com.ceyentra.springboot.visitersmanager.dao.SystemUserDAO;
 import com.ceyentra.springboot.visitersmanager.dao.VisitDAO;
+import com.ceyentra.springboot.visitersmanager.dao.VisitorCardDAO;
 import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
 import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
 import com.ceyentra.springboot.visitersmanager.entity.Visitor;
@@ -21,10 +22,10 @@ public class VisitersmanagerApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(VisitDAO visitDAO){
+	public CommandLineRunner commandLineRunner(VisitorCardDAO cardDAO){
 
 		return args -> {
-//			System.out.println(visitDAO.findLastVisit().getVisitor());
+//			System.out.println(cardDAO.findVisitorCardStatusByCardId(1));
 		};
 	}
 }
