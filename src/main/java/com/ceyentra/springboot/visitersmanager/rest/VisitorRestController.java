@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/visitor")
+@RequestMapping("/visitors")
 public class VisitorRestController {
 
     private final VisitorService visitorService;
@@ -28,7 +28,7 @@ public class VisitorRestController {
         this.visitorService = visitorService;
     }
 
-    @GetMapping
+    @GetMapping("/v2")
     public ResponseEntity<ResponseUtil<List<VisitorDTO>>> getAllVisitors() {
 
         Optional<List<VisitorDTO>> optionalVisitorDTOS = Optional.ofNullable(visitorService.readAllVisitors());
@@ -45,7 +45,7 @@ public class VisitorRestController {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v2/{id}")
     public ResponseEntity<ResponseUtil<VisitorDTO>> getVisitorById(@PathVariable int id) {
 
         Optional<VisitorDTO> optionalVisitorDTO = Optional.ofNullable(visitorService.readVisitorById(id));
@@ -60,7 +60,7 @@ public class VisitorRestController {
                 HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/v2")
     public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
 
         return new ResponseEntity(new ResponseUtil<>(
@@ -69,7 +69,7 @@ public class VisitorRestController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/v2")
     public ResponseEntity<ResponseUtil<VisitorDTO>> updateVisitor(@RequestBody VisitorDTO visitorDTO) {
 
         return new ResponseEntity(new ResponseUtil<>(
@@ -78,7 +78,7 @@ public class VisitorRestController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("v1/{id}")
     public ResponseEntity<ResponseUtil<String>> deleteVisitor(@PathVariable int id) {
 
         Optional<String> response = Optional.ofNullable(visitorService.deleteVisitorById(id));
@@ -93,12 +93,17 @@ public class VisitorRestController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/visits/{id}")
+    @GetMapping("v2/visits/{id}")
     public ResponseEntity<ResponseUtil<List<VisitDTO>>> getVisitsById(@PathVariable int id) {
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(), "retrieved visits for visitor - " + id,
                 visitorService.readAllVisitsByVisitorId(id)),
                 HttpStatus.OK);
+    }
+
+    @DeleteMapping("v1/test")
+    public String def() {
+        return "test";
     }
 }

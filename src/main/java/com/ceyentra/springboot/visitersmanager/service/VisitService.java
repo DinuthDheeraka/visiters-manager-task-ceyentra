@@ -9,7 +9,7 @@ public interface VisitService {
 
     List<VisitDTO> readAllVisits();
 
-    VisitDTO saveVisit(HttpRequestVisitDTO requestVisitDTO);
+    String saveVisit(HttpRequestVisitDTO requestVisitDTO);
 
     VisitDTO readVisitById(int id);
 
