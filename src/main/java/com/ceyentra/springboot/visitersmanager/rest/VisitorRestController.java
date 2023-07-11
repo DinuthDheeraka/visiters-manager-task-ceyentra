@@ -6,7 +6,6 @@ package com.ceyentra.springboot.visitersmanager.rest;
 
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
