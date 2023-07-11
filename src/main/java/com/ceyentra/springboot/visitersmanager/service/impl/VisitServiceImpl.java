@@ -175,6 +175,7 @@ public class VisitServiceImpl implements VisitService {
         Optional<Visit> byId = visitDAO.findById(id);
         if(byId.isPresent()){
             visitDAO.deleteById(id);
+            return "deleted visit";
         }
         return null;
     }

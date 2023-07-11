@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/visit")
+@RequestMapping("/visits")
 public class VisitRestController {
 
     private final VisitService visitService;
@@ -29,7 +29,7 @@ public class VisitRestController {
         this.visitService = visitService;
     }
 
-    @GetMapping
+    @GetMapping("/v2")
     public ResponseEntity<ResponseUtil<List<VisitDTO>>> getAllVisits() {
 
         Optional<List<VisitDTO>> visitDTOList = Optional.ofNullable(visitService.readAllVisits());
@@ -44,7 +44,7 @@ public class VisitRestController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v2/{id}")
     public ResponseEntity<ResponseUtil<VisitDTO>> getVisitById(@PathVariable int id) {
 
         Optional<VisitDTO> optionalVisitDTO = Optional.ofNullable(visitService.readVisitById(id));
@@ -59,7 +59,7 @@ public class VisitRestController {
                 HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/v2")
     public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
         visitService.saveVisit(requestVisitDTO);
         return new ResponseEntity<>(
@@ -71,7 +71,7 @@ public class VisitRestController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/v2")
     public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
         visitService.updateVisitById(requestVisitDTO);
         return new ResponseEntity<>(
@@ -83,7 +83,7 @@ public class VisitRestController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("v1/{id}")
+    @DeleteMapping("/v1/{id}")
     public ResponseEntity<ResponseUtil<String>> deleteVisitById(@PathVariable int id){
 
         Optional<String> optional = Optional.ofNullable(visitService.deleteVisitById(id));
