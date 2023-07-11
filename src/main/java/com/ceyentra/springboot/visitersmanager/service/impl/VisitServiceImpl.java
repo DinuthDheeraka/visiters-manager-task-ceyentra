@@ -139,6 +139,14 @@ public class VisitServiceImpl implements VisitService {
                 requestVisitDTO.getCheckInTime() ,requestVisitDTO.getCheckOutTime() ,
                 requestVisitDTO.getReason() , requestVisitDTO.getVisitStatus()
         );
+
+        //update card status
+        if(requestVisitDTO.getVisitStatus()==VisitStatus.CHECKED_OUT){
+            VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(requestVisitDTO.getVisitorCardId());
+            visitorCardDTO.setVisitorCardStatus(VisitorCardStatus.NOT_IN_USE);
+            visitorCardService.updateVisitorCard(visitorCardDTO);
+        }
+
         return null;
     }
 }

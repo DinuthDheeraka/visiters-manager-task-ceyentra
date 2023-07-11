@@ -17,30 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class AuthorizationSecurityConfig {
 
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager() {
-//
-//        UserDetails kevin = User.builder()
-//                .username("kevin")
-//                .password("{noop}test1234")
-//                .roles("EMPLOYEE")
-//                .build();
-//
-//        UserDetails ivan = User.builder()
-//                .username("ivan")
-//                .password("{noop}test1234")
-//                .roles("EMPLOYEE", "MANAGER")
-//                .build();
-//
-//        UserDetails yuri = User.builder()
-//                .username("yuri")
-//                .password("{noop}test1234")
-//                .roles("EMPLOYEE", "MANAGER", "ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(kevin, ivan, yuri);
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

@@ -47,3 +47,15 @@ public class VisitRestController {
         return null;
     }
 }
+
+
+//{
+//        "visitorId":1,
+//        "visitorCardId":1,
+//        "floorId":1,
+//        "checkInDate":"2023-07-09",
+//        "checkInTime":"13:30:00",
+//        "checkOutTime":"14:50:00",
+//        "reason":"Business Meeting",
+//        "visitStatus":"CHECKED_IN"
+//        }

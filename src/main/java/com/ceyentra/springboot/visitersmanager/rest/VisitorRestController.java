@@ -34,11 +34,11 @@ public class VisitorRestController {
         Optional<List<VisitorDTO>> optionalVisitorDTOS = Optional.ofNullable(visitorService.readAllVisitors());
 
         if (optionalVisitorDTOS.isEmpty()) {
-            throw new VisitorNotFoundException("Unable to find visitors");
+            throw new VisitorNotFoundException("unable to find visitors");
         }
 
         return new ResponseEntity(new ResponseUtil(
-                HttpStatus.OK.value(), "success",
+                HttpStatus.OK.value(), "successfully retrieved visitors",
                 optionalVisitorDTOS.get()),
                 HttpStatus.OK
         );
