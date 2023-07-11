@@ -47,24 +47,39 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public String deleteSystemUserById(int id) {
+
         Optional<SystemUser> byId = systemUserDAO.findById(id);
         if(byId.isPresent()){
             systemUserDAO.deleteById(id);
             return "deleted user - "+id;
         }
-        return "unable to find user - "+id;
+        return null;
     }
 
     @Override
     public SystemUserDTO readSystemUserById(int id) {
+
         Optional<SystemUser> byId = systemUserDAO.findById(id);
-        return modelMapper.map(byId.get(),SystemUserDTO.class);
+
+        if(byId.isPresent()){
+            return modelMapper.map(byId.get(),SystemUserDTO.class);
+        }
+
+        return null;
     }
 
     @Override
     public List<SystemUserDTO> readAllSystemUsers() {
-        return modelMapper.map(systemUserDAO.findAll(),
-                new TypeToken<ArrayList<SystemUserDTO>>() {
-                }.getType());
+
+        Optional<List<SystemUser>> optionalSystemUserDTOS = Optional.ofNullable(
+                systemUserDAO.findAll());
+
+        if(optionalSystemUserDTOS.isPresent()){
+            return modelMapper.map(optionalSystemUserDTOS.get(),
+                    new TypeToken<ArrayList<SystemUserDTO>>() {
+                    }.getType());
+        }
+
+        return null;
     }
 }
