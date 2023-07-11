@@ -82,6 +82,24 @@ public class VisitRestController {
                 ),
                 HttpStatus.OK);
     }
+
+    @DeleteMapping("v1/{id}")
+    public ResponseEntity<ResponseUtil<String>> deleteVisitById(@PathVariable int id){
+
+        Optional<String> optional = Optional.ofNullable(visitService.deleteVisitById(id));
+
+        if(optional.isEmpty()){
+            throw new VisitNotFoundException("couldn't find visit - "+id);
+        }
+
+        return new ResponseEntity<>(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(),
+                        "successfully deleted visit "+id+" details",
+                        "success"
+                ),
+                HttpStatus.OK);
+    }
 }
 
 
