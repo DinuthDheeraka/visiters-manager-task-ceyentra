@@ -5,7 +5,11 @@
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import com.ceyentra.springboot.visitersmanager.entity.Visitor;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.modelmapper.ModelMapper;
@@ -22,9 +26,9 @@ import java.util.Optional;
 @Transactional
 public class VisitorServiceImpl implements VisitorService {
 
-    private VisitorDAO visitorDAO;
+    private final VisitorDAO visitorDAO;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public VisitorServiceImpl(VisitorDAO visitorDAO, ModelMapper modelMapper) {
@@ -49,15 +53,15 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public VisitorDTO updateVisitor(VisitorDTO visitorDTO) {
         Visitor save = visitorDAO.save(modelMapper.map(visitorDTO, Visitor.class));
-        return modelMapper.map(save,VisitorDTO.class);
+        return modelMapper.map(save, VisitorDTO.class);
     }
 
     @Override
     public String deleteVisitorById(int id) {
         Optional<Visitor> byId = visitorDAO.findById(id);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             visitorDAO.deleteById(id);
-            return "deleted visitor - "+id;
+            return "deleted visitor - " + id;
         }
         return "unable to delete.visitor not found";
     }
@@ -65,6 +69,35 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public VisitorDTO readVisitorById(int id) {
         Optional<Visitor> byId = visitorDAO.findById(id);
-        return modelMapper.map(byId.get(),VisitorDTO.class);
+        return modelMapper.map(byId.get(), VisitorDTO.class);
+    }
+
+    @Override
+    public List<VisitDTO> readAllVisitsByVisitorId(int id) {
+
+        List<VisitDTO> visitDTOS = new ArrayList();
+        for (Visit visit : visitorDAO.findVisitsByVisitorId(id).getVisitList()) {
+
+            //visitDTO
+            VisitDTO visitDTO = new VisitDTO(visit.getVisitId(), visit.getCheckInDate(),
+                    visit.getCheckInTime(), visit.getCheckOutTime(),
+                    visit.getReason(), visit.getVisitStatus());
+
+            //visitorDTO
+            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
+
+            //visitorCardDTO
+            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
+
+            //floorDTO
+            FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
+
+            visitDTO.setVisitor(visitorDTO);
+            visitDTO.setVisitorCard(visitorCardDTO);
+            visitDTO.setFloor(floorDTO);
+
+            visitDTOS.add(visitDTO);
+        }
+        return visitDTOS;
     }
 }
