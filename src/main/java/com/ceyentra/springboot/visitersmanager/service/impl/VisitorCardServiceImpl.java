@@ -72,7 +72,7 @@ public class VisitorCardServiceImpl implements VisitorCardService {
 
     @Override
     public List<VisitorCardDTO> readVisitorCardByStatus(VisitorCardStatus status) {
-        return modelMapper.map(visitorCardDAO.findByVisitorCardStatus(status.ordinal()),
+        return modelMapper.map(visitorCardDAO.findByVisitorCardStatus(status),
                 new TypeToken<ArrayList<VisitorCardDTO>>() {
                 }.getType());
     }

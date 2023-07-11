@@ -10,10 +10,7 @@ import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Floor;
 import com.ceyentra.springboot.visitersmanager.entity.Visit;
-import com.ceyentra.springboot.visitersmanager.entity.Visitor;
-import com.ceyentra.springboot.visitersmanager.entity.VisitorCard;
 import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
 import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
@@ -45,7 +42,7 @@ public class VisitServiceImpl implements VisitService {
 
     @Autowired
     public VisitServiceImpl(VisitDAO visitDAO, VisitorCardService visitorCardService,
-                            VisitorService visitorService, FloorService floorService ,
+                            VisitorService visitorService, FloorService floorService,
                             ModelMapper modelMapper) {
         this.visitDAO = visitDAO;
         this.visitorCardService = visitorCardService;
@@ -57,19 +54,19 @@ public class VisitServiceImpl implements VisitService {
     @Override
     public List<VisitDTO> readAllVisits() {
         List<VisitDTO> visitDTOS = new ArrayList();
-        for(Visit visit : visitDAO.findAll()){
+        for (Visit visit : visitDAO.findAll()) {
             VisitDTO visitDTO = new VisitDTO(visit.getVisitId(), visit.getCheckInDate(),
-                    visit.getCheckInTime(),visit.getCheckOutTime(),
-                    visit.getReason(),visit.getVisitStatus());
+                    visit.getCheckInTime(), visit.getCheckOutTime(),
+                    visit.getReason(), visit.getVisitStatus());
 
             //visitorDTO
-            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(),VisitorDTO.class);
+            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
 
             //visitorCardDTO
-            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(),VisitorCardDTO.class);
+            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
 
             //floorDTO
-            FloorDTO floorDTO = modelMapper.map(visit.getFloor(),FloorDTO.class);
+            FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
 
             visitDTO.setVisitor(visitorDTO);
             visitDTO.setVisitorCard(visitorCardDTO);
@@ -86,9 +83,9 @@ public class VisitServiceImpl implements VisitService {
         //add visit
         visitDAO.saveVisit(
                 requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
-                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate() ,
-                requestVisitDTO.getCheckInTime() ,requestVisitDTO.getCheckOutTime() ,
-                requestVisitDTO.getReason() , VisitStatus.CHECKED_IN.ordinal()
+                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate(),
+                requestVisitDTO.getCheckInTime(), requestVisitDTO.getCheckOutTime(),
+                requestVisitDTO.getReason(), VisitStatus.CHECKED_IN.ordinal()
         );
 
         //update card status
@@ -102,23 +99,23 @@ public class VisitServiceImpl implements VisitService {
     @Override
     public VisitDTO readVisitById(int id) {
         Optional<Visit> byId = visitDAO.findById(id);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             Visit visit = byId.get();
 
             //visit dto
             VisitDTO visitDTO = new VisitDTO(
                     visit.getVisitId(), visit.getCheckInDate(),
-                    visit.getCheckInTime(),visit.getCheckOutTime(),
-                    visit.getReason(),visit.getVisitStatus());
+                    visit.getCheckInTime(), visit.getCheckOutTime(),
+                    visit.getReason(), visit.getVisitStatus());
 
             //visitorDTO
-            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(),VisitorDTO.class);
+            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
 
             //visitorCardDTO
-            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(),VisitorCardDTO.class);
+            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
 
             //floorDTO
-            FloorDTO floorDTO = modelMapper.map(visit.getFloor(),FloorDTO.class);
+            FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
 
             visitDTO.setVisitor(visitorDTO);
             visitDTO.setFloor(floorDTO);
@@ -136,13 +133,13 @@ public class VisitServiceImpl implements VisitService {
         visitDAO.updateVisit(
                 requestVisitDTO.getVisitId(),
                 requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
-                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate() ,
-                requestVisitDTO.getCheckInTime() ,requestVisitDTO.getCheckOutTime() ,
-                requestVisitDTO.getReason() , requestVisitDTO.getVisitStatus()
+                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate(),
+                requestVisitDTO.getCheckInTime(), requestVisitDTO.getCheckOutTime(),
+                requestVisitDTO.getReason(), requestVisitDTO.getVisitStatus()
         );
 
         //update card status
-        if(requestVisitDTO.getVisitStatus()==VisitStatus.CHECKED_OUT){
+        if (requestVisitDTO.getVisitStatus() == VisitStatus.CHECKED_OUT) {
             VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(requestVisitDTO.getVisitorCardId());
             visitorCardDTO.setVisitorCardStatus(VisitorCardStatus.NOT_IN_USE);
             visitorCardService.updateVisitorCard(visitorCardDTO);

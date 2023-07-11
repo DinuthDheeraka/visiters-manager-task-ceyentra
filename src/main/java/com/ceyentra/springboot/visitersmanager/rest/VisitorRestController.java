@@ -54,30 +54,27 @@ public class VisitorRestController {
             throw new VisitorNotFoundException("couldn't find visitor - " + id);
         }
 
-        return new ResponseEntity(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(), "retrieved visitor successfully",
-                        optionalVisitorDTO.get()),
+        return new ResponseEntity(new ResponseUtil<>(
+                HttpStatus.OK.value(), "retrieved visitor successfully",
+                optionalVisitorDTO.get()),
                 HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
 
-        return new ResponseEntity(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(), "saved visitor successfully",
-                        visitorService.saveVisitor(visitorDTO)),
+        return new ResponseEntity(new ResponseUtil<>(
+                HttpStatus.OK.value(), "saved visitor successfully",
+                visitorService.saveVisitor(visitorDTO)),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<ResponseUtil<VisitorDTO>> updateVisitor(@RequestBody VisitorDTO visitorDTO) {
 
-        return new ResponseEntity(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(), "updated visitor successfully",
-                        visitorService.updateVisitor(visitorDTO)),
+        return new ResponseEntity(new ResponseUtil<>(
+                HttpStatus.OK.value(), "updated visitor successfully",
+                visitorService.updateVisitor(visitorDTO)),
                 HttpStatus.OK);
     }
 
@@ -90,21 +87,18 @@ public class VisitorRestController {
             throw new VisitorNotFoundException("couldn't find visitor - " + id);
         }
 
-        return new ResponseEntity(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(), "deleted visitor successfully",
-                        response.get()),
+        return new ResponseEntity(new ResponseUtil<>(
+                HttpStatus.OK.value(), "deleted visitor successfully",
+                response.get()),
                 HttpStatus.OK);
     }
 
     @GetMapping("/visits/{id}")
     public ResponseEntity<ResponseUtil<List<VisitDTO>>> getVisitsById(@PathVariable int id) {
 
-        return new ResponseEntity<>(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(), "retrieved visits for visitor - "+id,
-                        visitorService.readAllVisitsByVisitorId(id)
-                ),HttpStatus.OK
-        );
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(), "retrieved visits for visitor - " + id,
+                visitorService.readAllVisitsByVisitorId(id)),
+                HttpStatus.OK);
     }
 }

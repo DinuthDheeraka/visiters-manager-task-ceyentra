@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VisitorErrorResponse {
+public class ErrorResponse {
 
     private int status;
 
