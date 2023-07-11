@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/visitor_card")
+@RequestMapping("/visitor_cards")
 public class VisitorCardRestController {
 
     private VisitorCardService visitorCardService;
@@ -26,27 +26,27 @@ public class VisitorCardRestController {
         return visitorCardService.readAllVisitorCard();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v2/{id}")
     public VisitorCardDTO getVisitorCardById(@PathVariable int id){
         return visitorCardService.readVisitorCardById(id);
     }
 
-    @GetMapping("/card_status/{status}")
-    public List<VisitorCardDTO> getVisitorCardById(@PathVariable VisitorCardStatus status){
+    @GetMapping("/v2/card_status/{status}")
+    public List<VisitorCardDTO> getVisitorCardsByStatus(@PathVariable VisitorCardStatus status){
         return visitorCardService.readVisitorCardByStatus(status);
     }
 
-    @PutMapping
+    @PutMapping("/v1")
     public VisitorCardDTO updateVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO){
         return visitorCardService.updateVisitorCard(visitorCardDTO);
     }
 
-    @PostMapping
+    @PostMapping("/v1")
     public VisitorCardDTO addVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO){
         return visitorCardService.saveVisitorCard(visitorCardDTO);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/v1/{id}")
     public String deleteVisitorCardById(@PathVariable int id){
         return visitorCardService.deleteVisitorCardBYId(id);
     }
