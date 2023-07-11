@@ -33,47 +33,78 @@ public class VisitorRestController {
 
         Optional<List<VisitorDTO>> optionalVisitorDTOS = Optional.ofNullable(visitorService.readAllVisitors());
 
-        if(optionalVisitorDTOS.isEmpty()){
+        if (optionalVisitorDTOS.isEmpty()) {
             throw new VisitorNotFoundException("Unable to find visitors");
         }
 
         return new ResponseEntity(new ResponseUtil(
-                        HttpStatus.OK.value(), "success" ,optionalVisitorDTOS.get()
-                ),
+                HttpStatus.OK.value(), "success",
+                optionalVisitorDTOS.get()),
                 HttpStatus.OK
         );
 
     }
 
     @GetMapping("/{id}")
-    public VisitorDTO getVisitorById(@PathVariable int id) {
+    public ResponseEntity<ResponseUtil<VisitorDTO>> getVisitorById(@PathVariable int id) {
 
         Optional<VisitorDTO> optionalVisitorDTO = Optional.ofNullable(visitorService.readVisitorById(id));
 
-        if(optionalVisitorDTO.isEmpty()){
-            throw new VisitorNotFoundException("couldn't find visitor - "+id);
+        if (optionalVisitorDTO.isEmpty()) {
+            throw new VisitorNotFoundException("couldn't find visitor - " + id);
         }
 
-        return optionalVisitorDTO.get();
+        return new ResponseEntity(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(), "retrieved visitor successfully",
+                        optionalVisitorDTO.get()),
+                HttpStatus.OK);
     }
 
     @PostMapping
-    public VisitorDTO addVisitor(@RequestBody VisitorDTO visitorDTO) {
-        return visitorService.saveVisitor(visitorDTO);
+    public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
+
+        return new ResponseEntity(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(), "saved visitor successfully",
+                        visitorService.saveVisitor(visitorDTO)),
+                HttpStatus.CREATED);
     }
 
     @PutMapping
-    public VisitorDTO updateVisitor(@RequestBody VisitorDTO visitorDTO) {
-        return visitorService.updateVisitor(visitorDTO);
+    public ResponseEntity<ResponseUtil<VisitorDTO>> updateVisitor(@RequestBody VisitorDTO visitorDTO) {
+
+        return new ResponseEntity(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(), "updated visitor successfully",
+                        visitorService.updateVisitor(visitorDTO)),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteVisitor(@PathVariable int id) {
-        return visitorService.deleteVisitorById(id);
+    public ResponseEntity<ResponseUtil<String>> deleteVisitor(@PathVariable int id) {
+
+        Optional<String> response = Optional.ofNullable(visitorService.deleteVisitorById(id));
+
+        if (response.isEmpty()) {
+            throw new VisitorNotFoundException("couldn't find visitor - " + id);
+        }
+
+        return new ResponseEntity(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(), "deleted visitor successfully",
+                        response.get()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/visits/{id}")
-    public List<VisitDTO> getVisitsById(@PathVariable int id) {
-        return visitorService.readAllVisitsByVisitorId(id);
+    public ResponseEntity<ResponseUtil<List<VisitDTO>>> getVisitsById(@PathVariable int id) {
+
+        return new ResponseEntity<>(
+                new ResponseUtil<>(
+                        HttpStatus.OK.value(), "retrieved visits for visitor - "+id,
+                        visitorService.readAllVisitsByVisitorId(id)
+                ),HttpStatus.OK
+        );
     }
 }

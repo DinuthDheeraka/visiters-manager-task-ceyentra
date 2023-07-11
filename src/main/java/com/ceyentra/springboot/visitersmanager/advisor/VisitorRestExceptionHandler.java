@@ -20,7 +20,7 @@ public class VisitorRestExceptionHandler {
         return new ResponseEntity(
                 new VisitorErrorResponse(
                         HttpStatus.NOT_FOUND.value(),
-                        "Visitor not found",
+                        e.getMessage(),
                         System.currentTimeMillis())
                 , HttpStatus.NOT_FOUND
         );

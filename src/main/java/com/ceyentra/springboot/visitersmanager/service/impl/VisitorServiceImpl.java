@@ -58,12 +58,12 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public String deleteVisitorById(int id) {
-        Optional<Visitor> byId = visitorDAO.findById(id);
-        if (byId.isPresent()) {
+        Optional<Visitor> visitor = visitorDAO.findById(id);
+        if (visitor.isPresent()) {
             visitorDAO.deleteById(id);
             return "deleted visitor - " + id;
         }
-        return "unable to delete.visitor not found";
+        return null;
     }
 
     @Override
