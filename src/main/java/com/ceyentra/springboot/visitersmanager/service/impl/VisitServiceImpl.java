@@ -13,6 +13,7 @@ import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
 import com.ceyentra.springboot.visitersmanager.entity.Visit;
 import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
 import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardInUseException;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
@@ -100,7 +101,11 @@ public class VisitServiceImpl implements VisitService {
         );
 
          //check card availability
+        if(visitorCardService.findVisitorCardStatusByCardId(
+                requestVisitDTO.getVisitorCardId())==VisitorCardStatus.IN_USE){
 
+            throw new VisitorCardInUseException("selected visitor card "+requestVisitDTO.getVisitorCardId()+" already in use");
+        }
 
         //update card status
         VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(requestVisitDTO.getVisitorCardId());

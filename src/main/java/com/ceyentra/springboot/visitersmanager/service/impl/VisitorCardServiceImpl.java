@@ -76,4 +76,9 @@ public class VisitorCardServiceImpl implements VisitorCardService {
                 new TypeToken<ArrayList<VisitorCardDTO>>() {
                 }.getType());
     }
+
+    @Override
+    public VisitorCardStatus findVisitorCardStatusByCardId(int id) {
+        return visitorCardDAO.findVisitorCardStatusByCardId(id);
+    }
 }

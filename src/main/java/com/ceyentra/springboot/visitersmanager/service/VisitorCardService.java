@@ -18,4 +18,6 @@ public interface VisitorCardService {
     String deleteVisitorCardBYId(int id);
 
     List<VisitorCardDTO> readVisitorCardByStatus(VisitorCardStatus status);
+
+    VisitorCardStatus findVisitorCardStatusByCardId(int id);
 }
