@@ -14,4 +14,6 @@ public interface VisitService {
     VisitDTO readVisitById(int id);
 
     VisitDTO updateVisitById(HttpRequestVisitDTO httpRequestVisitDTO);
+
+    String deleteVisitById(int id);
 }

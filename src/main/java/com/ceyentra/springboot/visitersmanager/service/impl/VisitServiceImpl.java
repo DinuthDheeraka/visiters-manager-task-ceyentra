@@ -169,4 +169,13 @@ public class VisitServiceImpl implements VisitService {
 
         return null;
     }
+
+    @Override
+    public String deleteVisitById(int id) {
+        Optional<Visit> byId = visitDAO.findById(id);
+        if(byId.isPresent()){
+            visitDAO.deleteById(id);
+        }
+        return null;
+    }
 }

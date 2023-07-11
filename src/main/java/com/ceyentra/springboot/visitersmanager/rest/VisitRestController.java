@@ -23,7 +23,6 @@ public class VisitRestController {
 
     private final VisitService visitService;
 
-
     @Autowired
     public VisitRestController(VisitService visitService) {
 
