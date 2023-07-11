@@ -53,28 +53,39 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public List<VisitDTO> readAllVisits() {
-        List<VisitDTO> visitDTOS = new ArrayList();
-        for (Visit visit : visitDAO.findAll()) {
-            VisitDTO visitDTO = new VisitDTO(visit.getVisitId(), visit.getCheckInDate(),
-                    visit.getCheckInTime(), visit.getCheckOutTime(),
-                    visit.getReason(), visit.getVisitStatus());
 
-            //visitorDTO
-            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
+        Optional<List<Visit>> visitDTOList = Optional.ofNullable(visitDAO.findAll());
 
-            //visitorCardDTO
-            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
+        if (visitDTOList.isPresent()) {
 
-            //floorDTO
-            FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
+            List<VisitDTO> visitDTOS = new ArrayList();
 
-            visitDTO.setVisitor(visitorDTO);
-            visitDTO.setVisitorCard(visitorCardDTO);
-            visitDTO.setFloor(floorDTO);
+            for (Visit visit : visitDTOList.get()) {
 
-            visitDTOS.add(visitDTO);
+                //visitDTO
+                VisitDTO visitDTO = new VisitDTO(
+                        visit.getVisitId(), visit.getCheckInDate(),
+                        visit.getCheckInTime(), visit.getCheckOutTime(),
+                        visit.getReason(), visit.getVisitStatus());
+
+                //visitorDTO
+                VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
+
+                //visitorCardDTO
+                VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
+
+                //floorDTO
+                FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
+
+                visitDTO.setVisitor(visitorDTO);
+                visitDTO.setVisitorCard(visitorCardDTO);
+                visitDTO.setFloor(floorDTO);
+
+                visitDTOS.add(visitDTO);
+            }
+            return visitDTOS;
         }
-        return visitDTOS;
+        return null;
     }
 
     @Override
@@ -98,8 +109,11 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public VisitDTO readVisitById(int id) {
+
         Optional<Visit> byId = visitDAO.findById(id);
+
         if (byId.isPresent()) {
+
             Visit visit = byId.get();
 
             //visit dto

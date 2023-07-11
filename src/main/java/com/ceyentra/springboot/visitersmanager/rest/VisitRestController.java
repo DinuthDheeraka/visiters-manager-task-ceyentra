@@ -6,11 +6,14 @@ package com.ceyentra.springboot.visitersmanager.rest;
 
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
+import com.ceyentra.springboot.visitersmanager.entity.Visit;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/visit")
@@ -27,12 +30,27 @@ public class VisitRestController {
 
     @GetMapping
     public List<VisitDTO> getAllVisits() {
-        return visitService.readAllVisits();
+
+        Optional<List<VisitDTO>> visitDTOList = Optional.ofNullable(visitService.readAllVisits());
+
+        if(visitDTOList.isEmpty()){
+            throw new VisitNotFoundException("couldn't find visits");
+        }
+
+        return visitDTOList.get();
+
     }
 
     @GetMapping("/{id}")
     public VisitDTO getVisitById(@PathVariable int id) {
-        return visitService.readVisitById(id);
+
+        Optional<VisitDTO> optionalVisitDTO = Optional.ofNullable(visitService.readVisitById(id));
+
+        if(optionalVisitDTO.isEmpty()){
+            throw new VisitNotFoundException("couldn't find visit - "+id);
+        }
+
+        return optionalVisitDTO.get();
     }
 
     @PostMapping
