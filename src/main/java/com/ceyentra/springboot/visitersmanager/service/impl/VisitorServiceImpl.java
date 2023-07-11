@@ -69,6 +69,9 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public VisitorDTO readVisitorById(int id) {
         Optional<Visitor> byId = visitorDAO.findById(id);
+        if(byId.isEmpty()){
+            return null;
+        }
         return modelMapper.map(byId.get(), VisitorDTO.class);
     }
 

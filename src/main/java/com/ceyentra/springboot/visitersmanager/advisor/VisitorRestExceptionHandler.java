@@ -8,11 +8,13 @@ import com.ceyentra.springboot.visitersmanager.exceptions.VisitorNotFoundExcepti
 import com.ceyentra.springboot.visitersmanager.exceptions.response.VisitorErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class VisitorRestExceptionHandler {
 
+    @ExceptionHandler
     public ResponseEntity<VisitorErrorResponse> handleException(VisitorNotFoundException e){
 
         return new ResponseEntity(

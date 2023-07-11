@@ -46,8 +46,15 @@ public class VisitorRestController {
     }
 
     @GetMapping("/{id}")
-    public VisitorDTO getAllVisitors(@PathVariable int id) {
-        return visitorService.readVisitorById(id);
+    public VisitorDTO getVisitorById(@PathVariable int id) {
+
+        Optional<VisitorDTO> optionalVisitorDTO = Optional.ofNullable(visitorService.readVisitorById(id));
+
+        if(optionalVisitorDTO.isEmpty()){
+            throw new VisitorNotFoundException("couldn't find visitor - "+id);
+        }
+
+        return optionalVisitorDTO.get();
     }
 
     @PostMapping
