@@ -18,6 +18,9 @@ public class AuthorizationSecurityConfig {
 
         http.authorizeHttpRequests(configurer ->
                 configurer
+                        .requestMatchers("/floors/v1/**").hasRole("ADMIN")
+                        .requestMatchers("/floors/v2/**").hasAnyRole("ADMIN", "RECEPTIONIST")
+
                         .requestMatchers("/visitor_cards/v1/**").hasRole("ADMIN")
                         .requestMatchers("/visitor_cards/v2/**").hasAnyRole("ADMIN", "RECEPTIONIST")
 

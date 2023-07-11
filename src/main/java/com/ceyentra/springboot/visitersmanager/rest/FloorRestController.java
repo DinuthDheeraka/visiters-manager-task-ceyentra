@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/floor")
+@RequestMapping("/floors")
 public class FloorRestController {
 
     private final FloorService floorService;
@@ -22,27 +22,27 @@ public class FloorRestController {
         this.floorService = floorService;
     }
 
-    @GetMapping
+    @GetMapping("/v2")
     public List<FloorDTO> getAllVisitorCard() {
         return floorService.readAllFloors();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v2/{id}")
     public FloorDTO getFloorById(@PathVariable int id) {
         return floorService.readFloorById(id);
     }
 
-    @PutMapping
+    @PutMapping("/v1")
     public FloorDTO updateFloor(@RequestBody FloorDTO floorDTO) {
         return floorService.updateFloor(floorDTO);
     }
 
-    @PostMapping
+    @PostMapping("/v1")
     public FloorDTO addFloor(@RequestBody FloorDTO floorDTO) {
         return floorService.saveFloor(floorDTO);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/v1/{id}")
     public String deleteFloorById(@PathVariable int id) {
         return floorService.deleteFloorById(id);
     }
