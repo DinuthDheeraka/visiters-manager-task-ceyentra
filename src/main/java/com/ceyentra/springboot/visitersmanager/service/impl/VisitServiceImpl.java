@@ -130,6 +130,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
+    @Transactional
     public VisitDTO updateVisitById(HttpRequestVisitDTO requestVisitDTO) {
 
         visitDAO.updateVisit(

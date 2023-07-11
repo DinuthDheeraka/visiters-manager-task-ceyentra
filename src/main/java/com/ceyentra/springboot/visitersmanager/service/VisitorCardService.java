@@ -1,6 +1,7 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface VisitorCardService {
     VisitorCardDTO updateVisitorCard(VisitorCardDTO visitorCardDTO);
 
     String deleteVisitorCardBYId(int id);
+
+    List<VisitorCardDTO> readVisitorCardByStatus(VisitorCardStatus status);
 }

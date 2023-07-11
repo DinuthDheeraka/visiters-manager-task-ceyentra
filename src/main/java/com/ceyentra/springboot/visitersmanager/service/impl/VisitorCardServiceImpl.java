@@ -8,6 +8,7 @@ import com.ceyentra.springboot.visitersmanager.dao.VisitorCardDAO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.VisitorCard;
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -67,5 +68,12 @@ public class VisitorCardServiceImpl implements VisitorCardService {
             return "deletes visitor card - "+id;
         }
         return "unable to find visitor card - "+id;
+    }
+
+    @Override
+    public List<VisitorCardDTO> readVisitorCardByStatus(VisitorCardStatus status) {
+        return modelMapper.map(visitorCardDAO.findByVisitorCardStatus(status.ordinal()),
+                new TypeToken<ArrayList<VisitorCardDTO>>() {
+                }.getType());
     }
 }

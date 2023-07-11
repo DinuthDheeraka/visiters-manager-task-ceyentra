@@ -5,6 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.rest;
 
 import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,11 @@ public class VisitorCardRestController {
     @GetMapping("/{id}")
     public VisitorCardDTO getVisitorCardById(@PathVariable int id){
         return visitorCardService.readVisitorCardById(id);
+    }
+
+    @GetMapping("/card_status/{status}")
+    public List<VisitorCardDTO> getVisitorCardById(@PathVariable VisitorCardStatus status){
+        return visitorCardService.readVisitorCardByStatus(status);
     }
 
     @PutMapping
