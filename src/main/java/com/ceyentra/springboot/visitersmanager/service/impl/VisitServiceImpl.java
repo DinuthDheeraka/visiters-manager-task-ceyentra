@@ -4,15 +4,15 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dao.VisitDAO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.repository.VisitRepository;
+import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
-import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
-import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
+import com.ceyentra.springboot.visitersmanager.entity.VisitEntity;
+import com.ceyentra.springboot.visitersmanager.enums.VisitStatus;
+import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardInUseException;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
@@ -31,7 +31,7 @@ import java.util.Optional;
 @Transactional
 public class VisitServiceImpl implements VisitService {
 
-    private final VisitDAO visitDAO;
+    private final VisitRepository visitDAO;
 
     private final VisitorCardService visitorCardService;
 
@@ -42,7 +42,7 @@ public class VisitServiceImpl implements VisitService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public VisitServiceImpl(VisitDAO visitDAO, VisitorCardService visitorCardService,
+    public VisitServiceImpl(VisitRepository visitDAO, VisitorCardService visitorCardService,
                             VisitorService visitorService, FloorService floorService,
                             ModelMapper modelMapper) {
         this.visitDAO = visitDAO;
@@ -55,13 +55,13 @@ public class VisitServiceImpl implements VisitService {
     @Override
     public List<VisitDTO> readAllVisits() {
 
-        Optional<List<Visit>> visitDTOList = Optional.ofNullable(visitDAO.findAll());
+        Optional<List<VisitEntity>> visitDTOList = Optional.ofNullable(visitDAO.findAll());
 
         if (visitDTOList.isPresent()) {
 
             List<VisitDTO> visitDTOS = new ArrayList();
 
-            for (Visit visit : visitDTOList.get()) {
+            for (VisitEntity visit : visitDTOList.get()) {
 
                 //visitDTO
                 VisitDTO visitDTO = new VisitDTO(
@@ -118,11 +118,11 @@ public class VisitServiceImpl implements VisitService {
     @Override
     public VisitDTO readVisitById(int id) {
 
-        Optional<Visit> byId = visitDAO.findById(id);
+        Optional<VisitEntity> byId = visitDAO.findById(id);
 
         if (byId.isPresent()) {
 
-            Visit visit = byId.get();
+            VisitEntity visit = byId.get();
 
             //visit dto
             VisitDTO visitDTO = new VisitDTO(
@@ -172,7 +172,7 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public String deleteVisitById(int id) {
-        Optional<Visit> byId = visitDAO.findById(id);
+        Optional<VisitEntity> byId = visitDAO.findById(id);
         if(byId.isPresent()){
             visitDAO.deleteById(id);
             return "deleted visit";

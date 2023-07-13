@@ -1,7 +1,7 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
-import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
 
 import java.util.List;
 

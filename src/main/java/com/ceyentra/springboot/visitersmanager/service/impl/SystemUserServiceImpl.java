@@ -4,9 +4,9 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dao.SystemUserDAO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.SystemUserDTO;
-import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
+import com.ceyentra.springboot.visitersmanager.repository.SystemUserRepository;
+import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
+import com.ceyentra.springboot.visitersmanager.entity.SystemUserEntity;
 import com.ceyentra.springboot.visitersmanager.service.SystemUserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -22,12 +22,12 @@ import java.util.Optional;
 @Transactional
 public class SystemUserServiceImpl implements SystemUserService {
 
-    private final SystemUserDAO systemUserDAO;
+    private final SystemUserRepository systemUserDAO;
 
     private final ModelMapper modelMapper;
 
     @Autowired
-    public SystemUserServiceImpl(SystemUserDAO systemUserDAO, ModelMapper modelMapper) {
+    public SystemUserServiceImpl(SystemUserRepository systemUserDAO, ModelMapper modelMapper) {
         this.systemUserDAO = systemUserDAO;
         this.modelMapper = modelMapper;
     }
@@ -35,20 +35,20 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public SystemUserDTO saveSystemUser(SystemUserDTO systemUserDTO) {
         systemUserDTO.setSystemUserId(0);
-        SystemUser save = systemUserDAO.save(modelMapper.map(systemUserDTO, SystemUser.class));
+        SystemUserEntity save = systemUserDAO.save(modelMapper.map(systemUserDTO, SystemUserEntity.class));
         return modelMapper.map(save, SystemUserDTO.class);
     }
 
     @Override
     public SystemUserDTO updateSystemUser(SystemUserDTO systemUserDTO) {
-        SystemUser save = systemUserDAO.save(modelMapper.map(systemUserDTO, SystemUser.class));
+        SystemUserEntity save = systemUserDAO.save(modelMapper.map(systemUserDTO, SystemUserEntity.class));
         return modelMapper.map(save,SystemUserDTO.class);
     }
 
     @Override
     public String deleteSystemUserById(int id) {
 
-        Optional<SystemUser> byId = systemUserDAO.findById(id);
+        Optional<SystemUserEntity> byId = systemUserDAO.findById(id);
         if(byId.isPresent()){
             systemUserDAO.deleteById(id);
             return "deleted user - "+id;
@@ -59,7 +59,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public SystemUserDTO readSystemUserById(int id) {
 
-        Optional<SystemUser> byId = systemUserDAO.findById(id);
+        Optional<SystemUserEntity> byId = systemUserDAO.findById(id);
 
         if(byId.isPresent()){
             return modelMapper.map(byId.get(),SystemUserDTO.class);
@@ -71,7 +71,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public List<SystemUserDTO> readAllSystemUsers() {
 
-        Optional<List<SystemUser>> optionalSystemUserDTOS = Optional.ofNullable(
+        Optional<List<SystemUserEntity>> optionalSystemUserDTOS = Optional.ofNullable(
                 systemUserDAO.findAll());
 
         if(optionalSystemUserDTOS.isPresent()){
@@ -81,5 +81,10 @@ public class SystemUserServiceImpl implements SystemUserService {
         }
 
         return null;
+    }
+
+    @Override
+    public Optional<SystemUserEntity> findByUserName(String userName) {
+        return systemUserDAO.findByUserName(userName);
     }
 }

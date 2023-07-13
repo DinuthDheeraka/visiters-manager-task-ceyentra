@@ -1,6 +1,6 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
-import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 
 import java.util.List;
 

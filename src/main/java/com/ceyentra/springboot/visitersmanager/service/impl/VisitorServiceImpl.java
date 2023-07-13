@@ -4,13 +4,13 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visit;
-import com.ceyentra.springboot.visitersmanager.entity.Visitor;
+import com.ceyentra.springboot.visitersmanager.repository.VisitorRepository;
+import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.entity.VisitEntity;
+import com.ceyentra.springboot.visitersmanager.entity.VisitorEntity;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -26,12 +26,12 @@ import java.util.Optional;
 @Transactional
 public class VisitorServiceImpl implements VisitorService {
 
-    private final VisitorDAO visitorDAO;
+    private final VisitorRepository visitorDAO;
 
     private final ModelMapper modelMapper;
 
     @Autowired
-    public VisitorServiceImpl(VisitorDAO visitorDAO, ModelMapper modelMapper) {
+    public VisitorServiceImpl(VisitorRepository visitorDAO, ModelMapper modelMapper) {
         this.visitorDAO = visitorDAO;
         this.modelMapper = modelMapper;
     }
@@ -46,19 +46,19 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public VisitorDTO saveVisitor(VisitorDTO visitorDTO) {
         visitorDTO.setVisitorId(0);
-        Visitor save = visitorDAO.save(modelMapper.map(visitorDTO, Visitor.class));
+        VisitorEntity save = visitorDAO.save(modelMapper.map(visitorDTO, VisitorEntity.class));
         return modelMapper.map(save, VisitorDTO.class);
     }
 
     @Override
     public VisitorDTO updateVisitor(VisitorDTO visitorDTO) {
-        Visitor save = visitorDAO.save(modelMapper.map(visitorDTO, Visitor.class));
+        VisitorEntity save = visitorDAO.save(modelMapper.map(visitorDTO, VisitorEntity.class));
         return modelMapper.map(save, VisitorDTO.class);
     }
 
     @Override
     public String deleteVisitorById(int id) {
-        Optional<Visitor> visitor = visitorDAO.findById(id);
+        Optional<VisitorEntity> visitor = visitorDAO.findById(id);
         if (visitor.isPresent()) {
             visitorDAO.deleteById(id);
             return "deleted visitor - " + id;
@@ -68,7 +68,7 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public VisitorDTO readVisitorById(int id) {
-        Optional<Visitor> byId = visitorDAO.findById(id);
+        Optional<VisitorEntity> byId = visitorDAO.findById(id);
         if(byId.isEmpty()){
             return null;
         }
@@ -79,7 +79,7 @@ public class VisitorServiceImpl implements VisitorService {
     public List<VisitDTO> readAllVisitsByVisitorId(int id) {
 
         List<VisitDTO> visitDTOS = new ArrayList();
-        for (Visit visit : visitorDAO.findVisitsByVisitorId(id).getVisitList()) {
+        for (VisitEntity visit : visitorDAO.findVisitsByVisitorId(id).getVisitList()) {
 
             //visitDTO
             VisitDTO visitDTO = new VisitDTO(visit.getVisitId(), visit.getCheckInDate(),

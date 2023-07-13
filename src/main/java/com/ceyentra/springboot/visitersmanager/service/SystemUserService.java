@@ -1,8 +1,10 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
-import com.ceyentra.springboot.visitersmanager.dto.entity.SystemUserDTO;
+import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
+import com.ceyentra.springboot.visitersmanager.entity.SystemUserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SystemUserService {
 
@@ -15,4 +17,6 @@ public interface SystemUserService {
     SystemUserDTO readSystemUserById(int id);
 
     List<SystemUserDTO> readAllSystemUsers();
+
+    Optional<SystemUserEntity> findByUserName(String userName);
 }

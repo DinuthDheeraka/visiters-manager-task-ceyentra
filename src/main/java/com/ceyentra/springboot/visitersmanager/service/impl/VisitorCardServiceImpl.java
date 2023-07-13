@@ -4,11 +4,10 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dao.VisitorCardDAO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorCardDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.VisitorCard;
-import com.ceyentra.springboot.visitersmanager.enums.entity.visitorcard.VisitorCardStatus;
+import com.ceyentra.springboot.visitersmanager.repository.VisitorCardRepository;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.entity.VisitorCardEntity;
+import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -24,12 +23,12 @@ import java.util.Optional;
 @Transactional
 public class VisitorCardServiceImpl implements VisitorCardService {
 
-    private VisitorCardDAO visitorCardDAO;
+    private VisitorCardRepository visitorCardDAO;
 
     private ModelMapper modelMapper;
 
     @Autowired
-    public VisitorCardServiceImpl(VisitorCardDAO visitorCardDAO, ModelMapper modelMapper) {
+    public VisitorCardServiceImpl(VisitorCardRepository visitorCardDAO, ModelMapper modelMapper) {
         this.visitorCardDAO = visitorCardDAO;
         this.modelMapper = modelMapper;
     }
@@ -43,26 +42,26 @@ public class VisitorCardServiceImpl implements VisitorCardService {
 
     @Override
     public VisitorCardDTO readVisitorCardById(int id) {
-        VisitorCard visitorCard = visitorCardDAO.findById(id).get();
+        VisitorCardEntity visitorCard = visitorCardDAO.findById(id).get();
         return modelMapper.map(visitorCard,VisitorCardDTO.class);
     }
 
     @Override
     public VisitorCardDTO saveVisitorCard(VisitorCardDTO visitorCardDTO) {
         visitorCardDTO.setCardId(0);
-        VisitorCard save = visitorCardDAO.save(modelMapper.map(visitorCardDTO, VisitorCard.class));
+        VisitorCardEntity save = visitorCardDAO.save(modelMapper.map(visitorCardDTO, VisitorCardEntity.class));
         return modelMapper.map(save,VisitorCardDTO.class);
     }
 
     @Override
     public VisitorCardDTO updateVisitorCard(VisitorCardDTO visitorCardDTO) {
-        VisitorCard save = visitorCardDAO.save(modelMapper.map(visitorCardDTO, VisitorCard.class));
+        VisitorCardEntity save = visitorCardDAO.save(modelMapper.map(visitorCardDTO, VisitorCardEntity.class));
         return modelMapper.map(save,VisitorCardDTO.class);
     }
 
     @Override
     public String deleteVisitorCardBYId(int id) {
-        Optional<VisitorCard> byId = visitorCardDAO.findById(id);
+        Optional<VisitorCardEntity> byId = visitorCardDAO.findById(id);
         if(byId.isPresent()){
             visitorCardDAO.deleteById(id);
             return "deletes visitor card - "+id;

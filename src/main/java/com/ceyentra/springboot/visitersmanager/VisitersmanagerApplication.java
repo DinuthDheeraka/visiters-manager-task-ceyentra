@@ -1,18 +1,10 @@
 package com.ceyentra.springboot.visitersmanager;
 
-import com.ceyentra.springboot.visitersmanager.dao.SystemUserDAO;
-import com.ceyentra.springboot.visitersmanager.dao.VisitDAO;
-import com.ceyentra.springboot.visitersmanager.dao.VisitorCardDAO;
-import com.ceyentra.springboot.visitersmanager.dao.VisitorDAO;
-import com.ceyentra.springboot.visitersmanager.entity.SystemUser;
-import com.ceyentra.springboot.visitersmanager.entity.Visitor;
-import com.ceyentra.springboot.visitersmanager.enums.entity.role.SystemUserType;
+import com.ceyentra.springboot.visitersmanager.repository.VisitorCardRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.Optional;
 
 @SpringBootApplication
 public class VisitersmanagerApplication {
@@ -22,7 +14,7 @@ public class VisitersmanagerApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(VisitorCardDAO cardDAO){
+	public CommandLineRunner commandLineRunner(VisitorCardRepository cardDAO){
 
 		return args -> {
 //			System.out.println(cardDAO.findVisitorCardStatusByCardId(1));

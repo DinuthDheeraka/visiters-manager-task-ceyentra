@@ -4,9 +4,9 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dao.FloorDAO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.FloorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Floor;
+import com.ceyentra.springboot.visitersmanager.repository.FloorRepository;
+import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.entity.FloorEntity;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -22,12 +22,12 @@ import java.util.Optional;
 @Transactional
 public class FloorServiceImpl implements FloorService {
 
-    private final FloorDAO floorDAO;
+    private final FloorRepository floorDAO;
 
     private final ModelMapper modelMapper;
 
     @Autowired
-    public FloorServiceImpl(FloorDAO floorDAO, ModelMapper modelMapper) {
+    public FloorServiceImpl(FloorRepository floorDAO, ModelMapper modelMapper) {
         this.floorDAO = floorDAO;
         this.modelMapper = modelMapper;
     }
@@ -47,13 +47,13 @@ public class FloorServiceImpl implements FloorService {
 
     @Override
     public FloorDTO updateFloor(FloorDTO floorDTO) {
-        Floor save = floorDAO.save(modelMapper.map(floorDTO, Floor.class));
+        FloorEntity save = floorDAO.save(modelMapper.map(floorDTO, FloorEntity.class));
         return modelMapper.map(save, FloorDTO.class);
     }
 
     @Override
     public String deleteFloorById(int id) {
-        Optional<Floor> byId = floorDAO.findById(id);
+        Optional<FloorEntity> byId = floorDAO.findById(id);
         if (byId.isPresent()) {
             floorDAO.deleteById(id);
             return "deletes floor - " + id;
@@ -64,7 +64,7 @@ public class FloorServiceImpl implements FloorService {
     @Override
     public FloorDTO saveFloor(FloorDTO floorDTO) {
         floorDTO.setFloorId(0);
-        Floor save = floorDAO.save(modelMapper.map(floorDTO, Floor.class));
+        FloorEntity save = floorDAO.save(modelMapper.map(floorDTO, FloorEntity.class));
         return modelMapper.map(save, FloorDTO.class);
     }
 }

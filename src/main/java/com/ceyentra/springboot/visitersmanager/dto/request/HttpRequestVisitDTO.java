@@ -4,7 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.dto.request;
 
-import com.ceyentra.springboot.visitersmanager.enums.entity.visitor.VisitStatus;
+import com.ceyentra.springboot.visitersmanager.enums.VisitStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

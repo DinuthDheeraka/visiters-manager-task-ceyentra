@@ -1,8 +1,7 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.entity.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.Visitor;
+import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
 
 import java.util.List;
 
