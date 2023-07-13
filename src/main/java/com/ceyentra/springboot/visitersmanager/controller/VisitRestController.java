@@ -78,7 +78,7 @@ public class VisitRestController {
                 new ResponseUtil<>(
                         HttpStatus.OK.value(),
                         "successfully updated visit details",
-                        "success"
+                        "updated visit -"+requestVisitDTO.getVisitId()
                 ),
                 HttpStatus.OK);
     }
@@ -95,8 +95,8 @@ public class VisitRestController {
         return new ResponseEntity<>(
                 new ResponseUtil<>(
                         HttpStatus.OK.value(),
-                        "successfully deleted visit "+id+" details",
-                        "success"
+                        "successfully deleted visit",
+                        "deleted visit - "+id
                 ),
                 HttpStatus.OK);
     }

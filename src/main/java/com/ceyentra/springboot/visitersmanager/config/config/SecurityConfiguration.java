@@ -56,6 +56,14 @@ public class SecurityConfiguration {
                 .requestMatchers(PUT, "/api/v1/visitors/**").hasAnyAuthority(ADMIN_UPDATE.name(), RECEPTIONIST_UPDATE.name())
                 .requestMatchers(DELETE, "/api/v1/visitors/**").hasAnyAuthority(ADMIN_DELETE.name(), RECEPTIONIST_DELETE.name())
 
+                 //auth visits end-points
+                .requestMatchers("/api/v1/visitors/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.RECEPTIONIST.name())
+
+                .requestMatchers(GET, "/api/v1/visits/**").hasAnyAuthority(ADMIN_READ.name(), RECEPTIONIST_READ.name())
+                .requestMatchers(POST, "/api/v1/visits/**").hasAnyAuthority(ADMIN_CREATE.name(), RECEPTIONIST_CREATE.name())
+                .requestMatchers(PUT, "/api/v1/visits/**").hasAnyAuthority(ADMIN_UPDATE.name(), RECEPTIONIST_UPDATE.name())
+                .requestMatchers(DELETE, "/api/v1/visits/**").hasAnyAuthority(ADMIN_DELETE.name())
+
 
                 .anyRequest()
                 .authenticated()

@@ -70,7 +70,7 @@ public class VisitorRestController {
     public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
 
         return new ResponseEntity(new ResponseUtil<>(
-                HttpStatus.OK.value(), "saved visitor successfully",
+                HttpStatus.CREATED.value(), "saved visitor successfully",
                 visitorService.saveVisitor(visitorDTO)),
                 HttpStatus.CREATED);
     }
