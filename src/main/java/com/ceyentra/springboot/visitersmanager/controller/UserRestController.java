@@ -5,12 +5,14 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
+import com.ceyentra.springboot.visitersmanager.exceptions.SystemUserNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -34,12 +36,22 @@ public class UserRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:read')")
     public UserDTO getUserById(@PathVariable int id){
-        return userService.readUserById(id);
+        Optional<UserDTO> optional = Optional.ofNullable(userService.readUserById(id));
+        if(optional.isEmpty()){
+            throw new SystemUserNotFoundException("user with id -"+id+" not found");
+        }
+        return optional.get();
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('admin:update')")
     public UserDTO updateUser(@RequestBody UserDTO userDTO){
         return userService.updateUser(userDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('admin:delete')")
+    public String deleteUserById(@PathVariable int id){
+        return userService.deleteUserById(id);
     }
 }

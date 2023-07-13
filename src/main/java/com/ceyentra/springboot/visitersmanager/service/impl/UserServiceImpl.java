@@ -9,6 +9,7 @@ import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
 import com.ceyentra.springboot.visitersmanager.entity.SystemUserEntity;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
 import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
+import com.ceyentra.springboot.visitersmanager.service.TokenService;
 import com.ceyentra.springboot.visitersmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,6 +29,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final TokenService tokenService;
 
     private final ModelMapper modelMapper;
 
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
     public String deleteUserById(int id) {
         Optional<UserEntity> byId = userRepository.findById(id);
         if(byId.isPresent()){
+            tokenService.deleteTokenByUserId(id);
             userRepository.deleteById(id);
             return  "user "+id+" deleted";
         }

@@ -48,14 +48,13 @@ public class SecurityConfiguration {
                 )
                 .permitAll()
 
+                 //auth visitor end-points
+                .requestMatchers("/api/v1/visitors/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.RECEPTIONIST.name())
 
-//                .requestMatchers("/api/v1/management/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.MANAGER.name())
-
-
-//                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-//                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
-//                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
-//                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+                .requestMatchers(GET, "/api/v1/visitors/**").hasAnyAuthority(ADMIN_READ.name(), RECEPTIONIST_READ.name())
+                .requestMatchers(POST, "/api/v1/visitors/**").hasAnyAuthority(ADMIN_CREATE.name(), RECEPTIONIST_CREATE.name())
+                .requestMatchers(PUT, "/api/v1/visitors/**").hasAnyAuthority(ADMIN_UPDATE.name(), RECEPTIONIST_UPDATE.name())
+                .requestMatchers(DELETE, "/api/v1/visitors/**").hasAnyAuthority(ADMIN_DELETE.name(), RECEPTIONIST_DELETE.name())
 
 
                 .anyRequest()
