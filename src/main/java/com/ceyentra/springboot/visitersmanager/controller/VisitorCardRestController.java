@@ -6,49 +6,120 @@ package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
+import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/visitor_cards")
 public class VisitorCardRestController {
 
-    private VisitorCardService visitorCardService;
+    private final VisitorCardService visitorCardService;
 
     public VisitorCardRestController(VisitorCardService visitorCardService) {
         this.visitorCardService = visitorCardService;
     }
 
     @GetMapping
-    public List<VisitorCardDTO> getAllVisitorCard(){
-        return visitorCardService.readAllVisitorCard();
+    public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getAllVisitorCard() {
+
+        Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readAllVisitorCard());
+
+        if (optional.isEmpty()) {
+            throw new VisitorCardNotFoundException("couldn't find visitor cards");
+        }
+
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "successfully retrieved visitor cards",
+                optional.get()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public VisitorCardDTO getVisitorCardById(@PathVariable int id){
-        return visitorCardService.readVisitorCardById(id);
+    public ResponseEntity<ResponseUtil<VisitorCardDTO>> getVisitorCardById(@PathVariable int id) {
+
+        Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.readVisitorCardById(id));
+
+        if (optional.isEmpty()) {
+            throw new VisitorCardNotFoundException("couldn't find visitor card - "+id);
+        }
+
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "successfully retrieved visitor card -"+id,
+                optional.get()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/card_status/{status}")
-    public List<VisitorCardDTO> getVisitorCardsByStatus(@PathVariable VisitorCardStatus status){
-        return visitorCardService.readVisitorCardByStatus(status);
+    public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getVisitorCardsByStatus(@PathVariable VisitorCardStatus status) {
+
+        Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readVisitorCardByStatus(status));
+
+        if (optional.isEmpty()) {
+            throw new VisitorCardNotFoundException("couldn't find visitor cards with status - "+status);
+        }
+
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "successfully retrieved visitor cards with status - "+status,
+                optional.get()),
+                HttpStatus.OK);
     }
 
     @PutMapping
-    public VisitorCardDTO updateVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO){
-        return visitorCardService.updateVisitorCard(visitorCardDTO);
+    public ResponseEntity<ResponseUtil<VisitorCardDTO>> updateVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO) {
+
+        Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.updateVisitorCard(visitorCardDTO));
+
+        if (optional.isEmpty()) {
+            throw new VisitorCardNotFoundException("couldn't update visitor cards - "+visitorCardDTO.getCardId());
+        }
+
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "successfully updated visitor card - "+visitorCardDTO.getCardId(),
+                optional.get()),
+                HttpStatus.OK);
     }
 
     @PostMapping
-    public VisitorCardDTO addVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO){
-        return visitorCardService.saveVisitorCard(visitorCardDTO);
+    public ResponseEntity<ResponseUtil<VisitorCardDTO>> addVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO) {
+
+        Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.saveVisitorCard(visitorCardDTO));
+
+        if (optional.isEmpty()) {
+            throw new VisitorCardNotFoundException("couldn't save visitor card");
+        }
+
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "successfully saved visitor card - "+optional.get().getCardId(),
+                optional.get()),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteVisitorCardById(@PathVariable int id){
-        return visitorCardService.deleteVisitorCardBYId(id);
+    public ResponseEntity<ResponseUtil<String>> deleteVisitorCardById(@PathVariable int id) {
+
+        Optional<String> optional = Optional.ofNullable(visitorCardService.deleteVisitorCardBYId(id));
+
+        if (optional.isEmpty()) {
+            throw new VisitorCardNotFoundException("couldn't find visitor card - "+id);
+        }
+
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "successfully deleted visitor card",
+                optional.get()),
+                HttpStatus.OK);
     }
 }

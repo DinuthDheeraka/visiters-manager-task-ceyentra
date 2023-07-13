@@ -64,7 +64,7 @@ public class VisitorCardServiceImpl implements VisitorCardService {
         Optional<VisitorCardEntity> byId = visitorCardDAO.findById(id);
         if(byId.isPresent()){
             visitorCardDAO.deleteById(id);
-            return "deletes visitor card - "+id;
+            return "deleted visitor card - "+id;
         }
         return null;
     }
