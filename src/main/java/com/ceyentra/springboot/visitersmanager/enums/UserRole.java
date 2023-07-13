@@ -21,20 +21,20 @@ public enum UserRole {
                     ADMIN_UPDATE,
                     ADMIN_DELETE,
                     ADMIN_CREATE,
-                    MANAGER_READ,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE,
-                    MANAGER_CREATE
+                    RECEPTIONIST_READ,
+                    RECEPTIONIST_UPDATE,
+                    RECEPTIONIST_DELETE,
+                    RECEPTIONIST_CREATE
             )
     ),
-    MANAGER(
+    RECEPTIONIST(
             Set.of(
-                    MANAGER_READ,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE,
-                    MANAGER_CREATE
+                    RECEPTIONIST_READ,
+                    RECEPTIONIST_UPDATE,
+                    RECEPTIONIST_DELETE,
+                    RECEPTIONIST_CREATE
             )
-    )
+    ),
 
     ;
 

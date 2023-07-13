@@ -11,6 +11,7 @@ import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,8 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping("v1/users")
+@RequestMapping("/api/v1/users")
+@PreAuthorize("hasRole('ADMIN')")
 public class SystemUserRestController {
 
     private final SystemUserService systemUserService;
@@ -30,6 +32,7 @@ public class SystemUserRestController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<ResponseUtil<List<SystemUserDTO>>> getAllSystemUsers() {
 
         Optional<List<SystemUserDTO>> optional =
@@ -48,6 +51,7 @@ public class SystemUserRestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<ResponseUtil<SystemUserDTO>> getSystemUserById(@PathVariable int id) {
         Optional<SystemUserDTO> optional = Optional.ofNullable(systemUserService.readSystemUserById(id));
 
@@ -63,22 +67,23 @@ public class SystemUserRestController {
                 HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseUtil<SystemUserDTO>> addSystemUser(@RequestBody SystemUserDTO systemUserDTO) {
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        systemUserDTO.setPassword("{bcrypt}" + passwordEncoder.encode(systemUserDTO.getPassword()));
-
-        return new ResponseEntity<>(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(),
-                        "successfully saved system user",
-                        systemUserService.saveSystemUser(systemUserDTO)),
-                HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<ResponseUtil<SystemUserDTO>> addSystemUser(@RequestBody SystemUserDTO systemUserDTO) {
+//
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//
+//        systemUserDTO.setPassword("{bcrypt}" + passwordEncoder.encode(systemUserDTO.getPassword()));
+//
+//        return new ResponseEntity<>(
+//                new ResponseUtil<>(
+//                        HttpStatus.OK.value(),
+//                        "successfully saved system user",
+//                        systemUserService.saveSystemUser(systemUserDTO)),
+//                HttpStatus.OK);
+//    }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<ResponseUtil<SystemUserDTO>> updateSystemUser(@RequestBody SystemUserDTO systemUserDTO) {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -93,6 +98,7 @@ public class SystemUserRestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteSystemUser(@PathVariable int id) {
 
         Optional<String> optional = Optional.ofNullable(systemUserService.deleteSystemUserById(id));

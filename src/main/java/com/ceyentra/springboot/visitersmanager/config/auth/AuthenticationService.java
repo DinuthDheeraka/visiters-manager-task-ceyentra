@@ -4,8 +4,8 @@ import com.ceyentra.springboot.visitersmanager.config.config.JwtService;
 import com.ceyentra.springboot.visitersmanager.entity.TokenEntity;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
 import com.ceyentra.springboot.visitersmanager.enums.TokenType;
-import com.ceyentra.springboot.visitersmanager.repository.TokenRepo;
-import com.ceyentra.springboot.visitersmanager.repository.UserRepo;
+import com.ceyentra.springboot.visitersmanager.repository.TokenRepository;
+import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +21,8 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepo repository;
-    private final TokenRepo tokenRepository;
+    private final UserRepository repository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;

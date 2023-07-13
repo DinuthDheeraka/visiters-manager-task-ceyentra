@@ -1,6 +1,6 @@
 package com.ceyentra.springboot.visitersmanager.config.config;
 
-import com.ceyentra.springboot.visitersmanager.repository.TokenRepo;
+import com.ceyentra.springboot.visitersmanager.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepo tokenRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(

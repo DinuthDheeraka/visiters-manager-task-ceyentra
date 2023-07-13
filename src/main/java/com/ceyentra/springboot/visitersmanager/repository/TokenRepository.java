@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TokenRepo extends JpaRepository<TokenEntity,Integer> {
+public interface TokenRepository extends JpaRepository<TokenEntity,Integer> {
 
     @Query(value = """
       select t from TokenEntity t inner join UserEntity u\s

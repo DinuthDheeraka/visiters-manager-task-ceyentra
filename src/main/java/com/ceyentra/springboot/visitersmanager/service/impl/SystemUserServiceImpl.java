@@ -4,9 +4,9 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.repository.SystemUserRepository;
 import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
 import com.ceyentra.springboot.visitersmanager.entity.SystemUserEntity;
+import com.ceyentra.springboot.visitersmanager.repository.SystemUserRepository;
 import com.ceyentra.springboot.visitersmanager.service.SystemUserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -42,16 +42,16 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public SystemUserDTO updateSystemUser(SystemUserDTO systemUserDTO) {
         SystemUserEntity save = systemUserDAO.save(modelMapper.map(systemUserDTO, SystemUserEntity.class));
-        return modelMapper.map(save,SystemUserDTO.class);
+        return modelMapper.map(save, SystemUserDTO.class);
     }
 
     @Override
     public String deleteSystemUserById(int id) {
 
         Optional<SystemUserEntity> byId = systemUserDAO.findById(id);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             systemUserDAO.deleteById(id);
-            return "deleted user - "+id;
+            return "deleted user - " + id;
         }
         return null;
     }
@@ -61,8 +61,8 @@ public class SystemUserServiceImpl implements SystemUserService {
 
         Optional<SystemUserEntity> byId = systemUserDAO.findById(id);
 
-        if(byId.isPresent()){
-            return modelMapper.map(byId.get(),SystemUserDTO.class);
+        if (byId.isPresent()) {
+            return modelMapper.map(byId.get(), SystemUserDTO.class);
         }
 
         return null;
@@ -74,7 +74,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         Optional<List<SystemUserEntity>> optionalSystemUserDTOS = Optional.ofNullable(
                 systemUserDAO.findAll());
 
-        if(optionalSystemUserDTOS.isPresent()){
+        if (optionalSystemUserDTOS.isPresent()) {
             return modelMapper.map(optionalSystemUserDTOS.get(),
                     new TypeToken<ArrayList<SystemUserDTO>>() {
                     }.getType());

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("v1/visitor_cards")
+@RequestMapping("/api/v1/visitor_cards")
 public class VisitorCardRestController {
 
     private VisitorCardService visitorCardService;

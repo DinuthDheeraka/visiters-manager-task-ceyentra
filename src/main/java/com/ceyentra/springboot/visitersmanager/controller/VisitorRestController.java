@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping("v1/visitors")
+@RequestMapping("/api/v1/visitors")
 public class VisitorRestController {
 
     private final VisitorService visitorService;

@@ -1,6 +1,6 @@
 package com.ceyentra.springboot.visitersmanager.config.config;
 
-import com.ceyentra.springboot.visitersmanager.repository.UserRepo;
+import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepo repository;
+    private final UserRepository repository;
 
     @Bean
     public UserDetailsService userDetailsService() {

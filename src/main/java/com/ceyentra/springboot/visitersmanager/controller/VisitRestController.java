@@ -5,7 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.request.RequestVisitDTO;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
@@ -19,14 +19,13 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping("v1/visits")
+@RequestMapping("/api/v1/visits")
 public class VisitRestController {
 
     private final VisitService visitService;
 
     @Autowired
     public VisitRestController(VisitService visitService) {
-
         this.visitService = visitService;
     }
 
@@ -61,7 +60,7 @@ public class VisitRestController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
+    public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
         visitService.saveVisit(requestVisitDTO);
         return new ResponseEntity<>(
                 new ResponseUtil<>(
@@ -73,7 +72,7 @@ public class VisitRestController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody HttpRequestVisitDTO requestVisitDTO) {
+    public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
         visitService.updateVisitById(requestVisitDTO);
         return new ResponseEntity<>(
                 new ResponseUtil<>(
@@ -102,15 +101,3 @@ public class VisitRestController {
                 HttpStatus.OK);
     }
 }
-
-
-//{
-//        "visitorId":1,
-//        "visitorCardId":1,
-//        "floorId":1,
-//        "checkInDate":"2023-07-09",
-//        "checkInTime":"13:30:00",
-//        "checkOutTime":"14:50:00",
-//        "reason":"Business Meeting",
-//        "visitStatus":"CHECKED_IN"
-//        }

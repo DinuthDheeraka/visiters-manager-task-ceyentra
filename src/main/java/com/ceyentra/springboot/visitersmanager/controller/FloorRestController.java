@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("v1/floors")
+@RequestMapping("/api/v1/floors")
 public class FloorRestController {
 
     private final FloorService floorService;

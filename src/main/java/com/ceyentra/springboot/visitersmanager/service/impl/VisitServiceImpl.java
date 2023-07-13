@@ -9,7 +9,7 @@ import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
-import com.ceyentra.springboot.visitersmanager.dto.request.HttpRequestVisitDTO;
+import com.ceyentra.springboot.visitersmanager.dto.request.RequestVisitDTO;
 import com.ceyentra.springboot.visitersmanager.entity.VisitEntity;
 import com.ceyentra.springboot.visitersmanager.enums.VisitStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
@@ -91,7 +91,7 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     @Transactional
-    public String saveVisit(HttpRequestVisitDTO requestVisitDTO) {
+    public String saveVisit(RequestVisitDTO requestVisitDTO) {
         //add visit
          visitDAO.saveVisit(
                 requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
@@ -150,7 +150,7 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     @Transactional
-    public VisitDTO updateVisitById(HttpRequestVisitDTO requestVisitDTO) {
+    public VisitDTO updateVisitById(RequestVisitDTO requestVisitDTO) {
 
         visitDAO.updateVisit(
                 requestVisitDTO.getVisitId(),

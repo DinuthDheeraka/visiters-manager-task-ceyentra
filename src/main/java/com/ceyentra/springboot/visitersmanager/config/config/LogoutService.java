@@ -1,6 +1,6 @@
 package com.ceyentra.springboot.visitersmanager.config.config;
 
-import com.ceyentra.springboot.visitersmanager.repository.TokenRepo;
+import com.ceyentra.springboot.visitersmanager.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
-    private final TokenRepo tokenRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     public void logout(

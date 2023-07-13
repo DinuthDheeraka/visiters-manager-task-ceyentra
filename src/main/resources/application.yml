@@ -4,7 +4,6 @@ spring:
     username: springstudent
     password: springstudent
 
-
 application:
   security:
     jwt:
