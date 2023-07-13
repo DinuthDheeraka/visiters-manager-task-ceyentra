@@ -12,6 +12,7 @@ import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/visitors")
+@PreAuthorize("hasRole('ADMIN') or hasRole('RECEPTIONIST')")
 public class VisitorRestController {
 
     private final VisitorService visitorService;
@@ -30,6 +32,7 @@ public class VisitorRestController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorDTO>>> getAllVisitors() {
 
         Optional<List<VisitorDTO>> optionalVisitorDTOS = Optional.ofNullable(visitorService.readAllVisitors());
@@ -47,6 +50,7 @@ public class VisitorRestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<VisitorDTO>> getVisitorById(@PathVariable int id) {
 
         Optional<VisitorDTO> optionalVisitorDTO = Optional.ofNullable(visitorService.readVisitorById(id));
@@ -62,6 +66,7 @@ public class VisitorRestController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('admin:create') or hasAuthority('receptionist:create')")
     public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
 
         return new ResponseEntity(new ResponseUtil<>(
@@ -71,6 +76,7 @@ public class VisitorRestController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('admin:update') or hasAuthority('receptionist:update')")
     public ResponseEntity<ResponseUtil<VisitorDTO>> updateVisitor(@RequestBody VisitorDTO visitorDTO) {
 
         return new ResponseEntity(new ResponseUtil<>(
@@ -80,6 +86,7 @@ public class VisitorRestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:delete') or hasAuthority('receptionist:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitor(@PathVariable int id) {
 
         Optional<String> response = Optional.ofNullable(visitorService.deleteVisitorById(id));
@@ -95,6 +102,7 @@ public class VisitorRestController {
     }
 
     @GetMapping("/visits/{id}")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitDTO>>> getVisitsById(@PathVariable int id) {
 
         return new ResponseEntity<>(new ResponseUtil<>(
