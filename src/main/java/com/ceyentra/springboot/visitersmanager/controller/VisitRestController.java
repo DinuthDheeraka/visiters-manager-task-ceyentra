@@ -66,7 +66,9 @@ public class VisitRestController {
     @PostMapping
     @PreAuthorize("hasAuthority('admin:create') or hasAuthority('receptionist:create')")
     public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
+
         visitService.saveVisit(requestVisitDTO);
+
         return new ResponseEntity<>(
                 new ResponseUtil<>(
                         HttpStatus.CREATED.value(),
@@ -81,6 +83,7 @@ public class VisitRestController {
     public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
 
         visitService.updateVisitById(requestVisitDTO);
+
         return new ResponseEntity<>(
                 new ResponseUtil<>(
                         HttpStatus.OK.value(),

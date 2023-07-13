@@ -149,7 +149,6 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    @Transactional
     public VisitDTO updateVisitById(RequestVisitDTO requestVisitDTO) {
 
         visitDAO.updateVisit(

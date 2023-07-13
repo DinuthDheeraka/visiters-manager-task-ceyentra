@@ -66,7 +66,7 @@ public class VisitorCardServiceImpl implements VisitorCardService {
             visitorCardDAO.deleteById(id);
             return "deletes visitor card - "+id;
         }
-        return "unable to find visitor card - "+id;
+        return null;
     }
 
     @Override
