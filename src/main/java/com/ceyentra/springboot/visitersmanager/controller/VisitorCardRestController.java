@@ -11,6 +11,7 @@ import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/visitor_cards")
+@PreAuthorize("hasRole('ADMIN') or hasRole('RECEPTIONIST')")
 public class VisitorCardRestController {
 
     private final VisitorCardService visitorCardService;
@@ -28,6 +30,7 @@ public class VisitorCardRestController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getAllVisitorCard() {
 
         Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readAllVisitorCard());
@@ -44,6 +47,7 @@ public class VisitorCardRestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<VisitorCardDTO>> getVisitorCardById(@PathVariable int id) {
 
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.readVisitorCardById(id));
@@ -60,6 +64,7 @@ public class VisitorCardRestController {
     }
 
     @GetMapping("/card_status/{status}")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getVisitorCardsByStatus(@PathVariable VisitorCardStatus status) {
 
         Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readVisitorCardByStatus(status));
@@ -76,6 +81,7 @@ public class VisitorCardRestController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<ResponseUtil<VisitorCardDTO>> updateVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO) {
 
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.updateVisitorCard(visitorCardDTO));
@@ -92,6 +98,7 @@ public class VisitorCardRestController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<ResponseUtil<VisitorCardDTO>> addVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO) {
 
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.saveVisitorCard(visitorCardDTO));
@@ -108,6 +115,7 @@ public class VisitorCardRestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitorCardById(@PathVariable int id) {
 
         Optional<String> optional = Optional.ofNullable(visitorCardService.deleteVisitorCardBYId(id));
