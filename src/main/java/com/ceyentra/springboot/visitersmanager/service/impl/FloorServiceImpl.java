@@ -56,9 +56,9 @@ public class FloorServiceImpl implements FloorService {
         Optional<FloorEntity> byId = floorDAO.findById(id);
         if (byId.isPresent()) {
             floorDAO.deleteById(id);
-            return "deletes floor - " + id;
+            return "deleted floor - " + id;
         }
-        return "unable to find floor - " + id;
+        return null;
     }
 
     @Override
