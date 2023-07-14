@@ -31,7 +31,7 @@ public class VisitorCardRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
-    public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getAllVisitorCard() {
+    public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getAllVisitorCards() {
 
         Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readAllVisitorCard());
 

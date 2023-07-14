@@ -72,6 +72,14 @@ public class SecurityConfiguration {
                 .requestMatchers(PUT, "/api/v1/visitor_cards/**").hasAnyAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/api/v1/visitor_cards/**").hasAnyAuthority(ADMIN_DELETE.name())
 
+                //auth floor end-points
+                .requestMatchers("/api/v1/floors/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.RECEPTIONIST.name())
+
+                .requestMatchers(GET, "/api/v1/floors/**").hasAnyAuthority(ADMIN_READ.name(), RECEPTIONIST_READ.name())
+                .requestMatchers(POST, "/api/v1/floors/**").hasAnyAuthority(ADMIN_CREATE.name())
+                .requestMatchers(PUT, "/api/v1/floors/**").hasAnyAuthority(ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, "/api/v1/floors/**").hasAnyAuthority(ADMIN_DELETE.name())
+
 
                 .anyRequest()
                 .authenticated()
