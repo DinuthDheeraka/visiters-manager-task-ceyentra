@@ -11,4 +11,6 @@ public interface VisitorRepository extends JpaRepository<VisitorEntity, Integer>
 
     @Query("from VisitorEntity v join fetch v.visitList where v.visitorId=:id")
     VisitorEntity findVisitsByVisitorId(@Param("id") int id);
+
+    VisitorEntity findByNic(String nic);
 }

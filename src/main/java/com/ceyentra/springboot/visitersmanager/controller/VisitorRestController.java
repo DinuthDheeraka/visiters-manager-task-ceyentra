@@ -65,6 +65,24 @@ public class VisitorRestController {
                 HttpStatus.OK);
     }
 
+
+    @GetMapping("/nic")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
+    public ResponseEntity<ResponseUtil<VisitorDTO>> getVisitorByNic(@RequestParam("nic") String nic) {
+
+        Optional<VisitorDTO> optionalVisitorDTO = Optional.ofNullable(visitorService.readVisitorByNic(nic));
+
+        if (optionalVisitorDTO.isEmpty()) {
+            throw new VisitorNotFoundException("couldn't find visitor with nic - " + nic);
+        }
+
+        return new ResponseEntity(new ResponseUtil<>(
+                HttpStatus.OK.value(), "retrieved visitor successfully",
+                optionalVisitorDTO.get()),
+                HttpStatus.OK);
+    }
+
+
     @PostMapping
     @PreAuthorize("hasAuthority('admin:create') or hasAuthority('receptionist:create')")
     public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
@@ -110,5 +128,6 @@ public class VisitorRestController {
                 visitorService.readAllVisitsByVisitorId(id)),
                 HttpStatus.OK);
     }
+
 
 }

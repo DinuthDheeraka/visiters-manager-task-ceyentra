@@ -17,5 +17,7 @@ public interface VisitorService {
 
     VisitorDTO readVisitorById(int id);
 
+    VisitorDTO readVisitorByNic(String nic);
+
     List<VisitDTO> readAllVisitsByVisitorId(int id);
 }

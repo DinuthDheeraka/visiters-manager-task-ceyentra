@@ -56,6 +56,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
                 authToken.setDetails(
+//                        WebAuthenticationDetailsSource is responsible for creating an
+//                        AuthenticationDetails object, which represents additional
+//                        details about the authentication request.
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);

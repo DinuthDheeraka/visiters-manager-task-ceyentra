@@ -90,7 +90,6 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    @Transactional
     public String saveVisit(RequestVisitDTO requestVisitDTO) {
         //add visit
          visitDAO.saveVisit(

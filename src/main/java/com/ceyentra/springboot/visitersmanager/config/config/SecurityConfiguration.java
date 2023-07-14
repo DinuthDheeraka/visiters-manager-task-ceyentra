@@ -85,9 +85,13 @@ public class SecurityConfiguration {
                 .authenticated()
                 .and()
                 .sessionManagement()
+                ////With stateless sessions, the server does not store session-related
+                // information on the server-side.
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
+                ////JWT authentication filter (jwtAuthFilter) to the Spring Security filter
+                // chain before the UsernamePasswordAuthenticationFilter.
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout()
                 .logoutUrl("/api/v1/auth/logout")

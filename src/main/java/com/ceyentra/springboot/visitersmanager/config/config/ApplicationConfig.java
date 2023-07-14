@@ -21,12 +21,14 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
+        //UserDetailsService is responsible for retrieving user details, such as username, password, and authorities, from a data source.
         return username -> repository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        // authenticate users based on a UserDetailsService and a PasswordEncoder
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());

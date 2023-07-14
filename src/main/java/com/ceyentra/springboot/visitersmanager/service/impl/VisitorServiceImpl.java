@@ -76,6 +76,11 @@ public class VisitorServiceImpl implements VisitorService {
     }
 
     @Override
+    public VisitorDTO readVisitorByNic(String nic) {
+        return modelMapper.map(visitorDAO.findByNic(nic),VisitorDTO.class);
+    }
+
+    @Override
     public List<VisitDTO> readAllVisitsByVisitorId(int id) {
 
         List<VisitDTO> visitDTOS = new ArrayList();
