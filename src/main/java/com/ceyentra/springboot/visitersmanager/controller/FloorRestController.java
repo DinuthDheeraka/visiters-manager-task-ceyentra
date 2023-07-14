@@ -73,7 +73,7 @@ public class FloorRestController {
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully updated floor details - "+optional.get(),
+                "successfully updated floor details - "+floorDTO.getFloorId(),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -89,7 +89,7 @@ public class FloorRestController {
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully saved floor details - "+optional.get(),
+                "successfully saved floor details - "+floorDTO.getFloorId(),
                 optional.get()),
                 HttpStatus.OK);
     }
