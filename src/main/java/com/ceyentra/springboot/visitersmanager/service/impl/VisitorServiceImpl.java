@@ -12,6 +12,7 @@ import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.VisitEntity;
 import com.ceyentra.springboot.visitersmanager.entity.VisitorEntity;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +25,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class VisitorServiceImpl implements VisitorService {
 
     private final VisitorRepository visitorDAO;
 
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public VisitorServiceImpl(VisitorRepository visitorDAO, ModelMapper modelMapper) {
-        this.visitorDAO = visitorDAO;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public List<VisitorDTO> readAllVisitors() {
@@ -45,6 +41,7 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public VisitorDTO saveVisitor(VisitorDTO visitorDTO) {
+        System.out.println(visitorDTO);
         visitorDTO.setVisitorId(0);
         VisitorEntity save = visitorDAO.save(modelMapper.map(visitorDTO, VisitorEntity.class));
         return modelMapper.map(save, VisitorDTO.class);

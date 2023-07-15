@@ -40,22 +40,6 @@ public class VisitorEntity {
                     CascadeType.PERSIST, CascadeType.REFRESH})
     List<VisitEntity> visitList;
 
-    public VisitorEntity(String nic, String firstName,
-                         String lastName, String phone) {
-        this.nic = nic;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-    }
-
-    public VisitorEntity(int visitorId, String nic, String firstName, String lastName, String phone) {
-        this.visitorId = visitorId;
-        this.nic = nic;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-    }
-
     @Override
     public String toString() {
         return "Visitor{" +

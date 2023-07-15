@@ -29,6 +29,7 @@ public class VisitorCardEntity {
     String cardType;
 
     @Column(name = "card_status")
+    @Enumerated(EnumType.STRING)
     VisitorCardStatus visitorCardStatus;
 
     @OneToMany(mappedBy = "visitorCard",

@@ -79,12 +79,14 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public String saveVisit(RequestVisitDTO requestVisitDTO) {
+
+        System.out.println(requestVisitDTO);
         //add visit
          visitDAO.saveVisit(
                 requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
                 requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate(),
                 requestVisitDTO.getCheckInTime(), requestVisitDTO.getCheckOutTime(),
-                requestVisitDTO.getReason(), VisitStatus.CHECKED_IN
+                requestVisitDTO.getReason(), VisitStatus.CHECKED_IN.name()
         );
 
          //check card availability
@@ -141,19 +143,19 @@ public class VisitServiceImpl implements VisitService {
         Optional<VisitDTO> optional = Optional.ofNullable(readVisitById(requestVisitDTO.getVisitId()));
 
         if(optional.isEmpty()){
-            throw new VisitNotFoundException("couldn't find visit to update");
+            throw  new VisitNotFoundException("couldn't find visit");
         }
 
         VisitDTO visitDTO = optional.get();
 
-        visitDAO.updateVisit(
+        visitDAO.patcher(
                 requestVisitDTO.getVisitId(),
 
                 requestVisitDTO.getVisitorId()==0?
-                        visitDTO.getVisitId():requestVisitDTO.getVisitId(),
+                        visitDTO.getVisitor().getVisitorId():requestVisitDTO.getVisitorId(),
 
                 requestVisitDTO.getVisitorCardId()==0?
-                        visitDTO.getVisitorCard().getCardId():requestVisitDTO.getVisitorCardId(),
+                        visitDTO.getVisitorCard().getCardId(): requestVisitDTO.getVisitorCardId(),
 
                 requestVisitDTO.getFloorId()==0?
                         visitDTO.getFloor().getFloorId(): requestVisitDTO.getFloorId(),
@@ -171,12 +173,12 @@ public class VisitServiceImpl implements VisitService {
                         visitDTO.getReason():requestVisitDTO.getReason(),
 
                 requestVisitDTO.getVisitStatus()==null?
-                        visitDTO.getVisitStatus():requestVisitDTO.getVisitStatus()
+                        visitDTO.getVisitStatus().name():requestVisitDTO.getVisitStatus().name()
         );
 
         //update card status
         if (requestVisitDTO.getVisitStatus() == VisitStatus.CHECKED_OUT) {
-            VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(requestVisitDTO.getVisitorCardId());
+            VisitorCardDTO visitorCardDTO = visitorCardService.readVisitorCardById(visitDTO.getVisitorCard().getCardId());
             visitorCardDTO.setVisitorCardStatus(VisitorCardStatus.NOT_IN_USE);
             visitorCardService.updateVisitorCard(visitorCardDTO);
         }
@@ -196,7 +198,7 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public VisitDTO updateVisitStatusById(int id, VisitStatus visitStatus) {
-        VisitEntity visitEntity = visitDAO.updateVisitStatusById(visitStatus, id);
-        return modelMapper.map(visitEntity,VisitDTO.class);
+        visitDAO.updateVisitStatusById(visitStatus.name(), id);
+        return null;
     }
 }

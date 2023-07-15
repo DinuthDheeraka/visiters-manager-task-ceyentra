@@ -67,6 +67,7 @@ public class VisitRestController {
     @PreAuthorize("hasAuthority('admin:create') or hasAuthority('receptionist:create')")
     public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
 
+        System.out.println(requestVisitDTO);
         visitService.saveVisit(requestVisitDTO);
 
         return new ResponseEntity<>(
@@ -82,6 +83,7 @@ public class VisitRestController {
     @PreAuthorize("hasAuthority('admin:update') or hasAuthority('receptionist:update')")
     public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
 
+        System.out.println(requestVisitDTO);
         visitService.updateVisitById(requestVisitDTO);
 
         return new ResponseEntity<>(

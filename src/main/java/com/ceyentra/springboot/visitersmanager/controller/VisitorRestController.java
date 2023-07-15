@@ -87,6 +87,7 @@ public class VisitorRestController {
     @PreAuthorize("hasAuthority('admin:create') or hasAuthority('receptionist:create')")
     public ResponseEntity<ResponseUtil<VisitorDTO>> addVisitor(@RequestBody VisitorDTO visitorDTO) {
 
+        System.out.println(visitorDTO);
         return new ResponseEntity(new ResponseUtil<>(
                 HttpStatus.CREATED.value(), "saved visitor successfully",
                 visitorService.saveVisitor(visitorDTO)),
