@@ -1,4 +1,4 @@
-package com.ceyentra.springboot.visitersmanager.config.auth;
+package com.ceyentra.springboot.visitersmanager.dto.request;
 
 import com.ceyentra.springboot.visitersmanager.enums.UserRole;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class RegisterRequestDTO {
 
     private String firstname;
     private String lastname;

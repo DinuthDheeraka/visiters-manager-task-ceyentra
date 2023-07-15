@@ -1,4 +1,4 @@
-package com.ceyentra.springboot.visitersmanager.config.auth;
+package com.ceyentra.springboot.visitersmanager.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class AuthenticationRequestDTO {
 
   private String email;
   String password;

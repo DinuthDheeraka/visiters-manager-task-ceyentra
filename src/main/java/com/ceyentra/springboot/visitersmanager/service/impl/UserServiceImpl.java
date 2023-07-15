@@ -4,9 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dto.SystemUserDTO;
 import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
-import com.ceyentra.springboot.visitersmanager.entity.SystemUserEntity;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
 import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
 import com.ceyentra.springboot.visitersmanager.service.TokenService;
@@ -14,7 +12,6 @@ import com.ceyentra.springboot.visitersmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

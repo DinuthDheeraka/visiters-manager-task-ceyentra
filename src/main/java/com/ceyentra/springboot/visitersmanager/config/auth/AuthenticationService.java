@@ -1,6 +1,9 @@
 package com.ceyentra.springboot.visitersmanager.config.auth;
 
 import com.ceyentra.springboot.visitersmanager.config.config.JwtService;
+import com.ceyentra.springboot.visitersmanager.dto.request.AuthenticationRequestDTO;
+import com.ceyentra.springboot.visitersmanager.dto.request.RegisterRequestDTO;
+import com.ceyentra.springboot.visitersmanager.dto.response.AuthenticationResponseDTO;
 import com.ceyentra.springboot.visitersmanager.entity.TokenEntity;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
 import com.ceyentra.springboot.visitersmanager.enums.TokenType;
@@ -15,10 +18,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthenticationService {
 
@@ -32,7 +37,7 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponseDTO register(RegisterRequestDTO request) {
         var user = UserEntity.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -44,13 +49,13 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
+        return AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -63,7 +68,7 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
+        return AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -110,7 +115,7 @@ public class AuthenticationService {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
+                var authResponse = AuthenticationResponseDTO.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();

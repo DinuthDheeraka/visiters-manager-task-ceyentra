@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
 import com.ceyentra.springboot.visitersmanager.repository.VisitRepository;
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
@@ -18,6 +19,7 @@ import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,28 +31,14 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class VisitServiceImpl implements VisitService {
 
     private final VisitRepository visitDAO;
 
     private final VisitorCardService visitorCardService;
 
-    private final VisitorService visitorService;
-
-    private final FloorService floorService;
-
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public VisitServiceImpl(VisitRepository visitDAO, VisitorCardService visitorCardService,
-                            VisitorService visitorService, FloorService floorService,
-                            ModelMapper modelMapper) {
-        this.visitDAO = visitDAO;
-        this.visitorCardService = visitorCardService;
-        this.modelMapper = modelMapper;
-        this.visitorService = visitorService;
-        this.floorService = floorService;
-    }
 
     @Override
     public List<VisitDTO> readAllVisits() {
@@ -96,13 +84,13 @@ public class VisitServiceImpl implements VisitService {
                 requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
                 requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate(),
                 requestVisitDTO.getCheckInTime(), requestVisitDTO.getCheckOutTime(),
-                requestVisitDTO.getReason(), VisitStatus.CHECKED_IN.ordinal()
+                requestVisitDTO.getReason(), VisitStatus.CHECKED_IN
         );
 
          //check card availability
-        if(visitorCardService.findVisitorCardStatusByCardId(
-                requestVisitDTO.getVisitorCardId())==VisitorCardStatus.IN_USE){
-
+        if(visitorCardService
+                .findVisitorCardStatusByCardId
+                        (requestVisitDTO.getVisitorCardId())==VisitorCardStatus.IN_USE){
             throw new VisitorCardInUseException("selected visitor card "+requestVisitDTO.getVisitorCardId()+" already in use");
         }
 
@@ -150,12 +138,40 @@ public class VisitServiceImpl implements VisitService {
     @Override
     public VisitDTO updateVisitById(RequestVisitDTO requestVisitDTO) {
 
+        Optional<VisitDTO> optional = Optional.ofNullable(readVisitById(requestVisitDTO.getVisitId()));
+
+        if(optional.isEmpty()){
+            throw new VisitNotFoundException("couldn't find visit to update");
+        }
+
+        VisitDTO visitDTO = optional.get();
+
         visitDAO.updateVisit(
                 requestVisitDTO.getVisitId(),
-                requestVisitDTO.getVisitorId(), requestVisitDTO.getVisitorCardId(),
-                requestVisitDTO.getFloorId(), requestVisitDTO.getCheckInDate(),
-                requestVisitDTO.getCheckInTime(), requestVisitDTO.getCheckOutTime(),
-                requestVisitDTO.getReason(), requestVisitDTO.getVisitStatus()
+
+                requestVisitDTO.getVisitorId()==0?
+                        visitDTO.getVisitId():requestVisitDTO.getVisitId(),
+
+                requestVisitDTO.getVisitorCardId()==0?
+                        visitDTO.getVisitorCard().getCardId():requestVisitDTO.getVisitorCardId(),
+
+                requestVisitDTO.getFloorId()==0?
+                        visitDTO.getFloor().getFloorId(): requestVisitDTO.getFloorId(),
+
+                requestVisitDTO.getCheckInDate()==null?
+                        visitDTO.getCheckInDate():requestVisitDTO.getCheckInDate(),
+
+                requestVisitDTO.getCheckInTime()==null?
+                        visitDTO.getCheckInTime():requestVisitDTO.getCheckInTime(),
+
+                requestVisitDTO.getCheckOutTime()==null?
+                        visitDTO.getCheckOutTime():requestVisitDTO.getCheckOutTime(),
+
+                requestVisitDTO.getReason()==null?
+                        visitDTO.getReason():requestVisitDTO.getReason(),
+
+                requestVisitDTO.getVisitStatus()==null?
+                        visitDTO.getVisitStatus():requestVisitDTO.getVisitStatus()
         );
 
         //update card status
@@ -176,5 +192,11 @@ public class VisitServiceImpl implements VisitService {
             return "deleted visit";
         }
         return null;
+    }
+
+    @Override
+    public VisitDTO updateVisitStatusById(int id, VisitStatus visitStatus) {
+        VisitEntity visitEntity = visitDAO.updateVisitStatusById(visitStatus, id);
+        return modelMapper.map(visitEntity,VisitDTO.class);
     }
 }

@@ -1,9 +1,9 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
-import com.ceyentra.springboot.visitersmanager.config.auth.AuthenticationRequest;
-import com.ceyentra.springboot.visitersmanager.config.auth.AuthenticationResponse;
+import com.ceyentra.springboot.visitersmanager.dto.request.AuthenticationRequestDTO;
+import com.ceyentra.springboot.visitersmanager.dto.response.AuthenticationResponseDTO;
 import com.ceyentra.springboot.visitersmanager.config.auth.AuthenticationService;
-import com.ceyentra.springboot.visitersmanager.config.auth.RegisterRequest;
+import com.ceyentra.springboot.visitersmanager.dto.request.RegisterRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +23,11 @@ public class AuthenticationController {
   private final AuthenticationService service;
 
   @PostMapping("/register")
-  public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+  public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody RegisterRequestDTO request) {
     return ResponseEntity.ok(service.register(request));
   }
   @PostMapping("/authenticate")
-  public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+  public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request) {
     return ResponseEntity.ok(service.authenticate(request));
   }
 

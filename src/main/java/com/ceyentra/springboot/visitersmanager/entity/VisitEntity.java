@@ -54,6 +54,7 @@ public class VisitEntity {
     String reason;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     VisitStatus visitStatus;
 
     public VisitEntity(LocalDate checkInDate, LocalTime checkInTime,
