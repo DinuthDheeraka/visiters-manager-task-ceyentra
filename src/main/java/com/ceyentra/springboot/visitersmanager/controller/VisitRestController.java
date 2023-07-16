@@ -6,6 +6,7 @@ package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.RequestVisitDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,21 +34,69 @@ public class VisitRestController {
         this.visitService = visitService;
     }
 
+//    @GetMapping
+//    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
+//    public ResponseEntity<ResponseUtil<List<VisitDTO>>> getAllVisits() {
+//
+//        Optional<List<VisitDTO>> visitDTOList = Optional.ofNullable(visitService.readAllVisits());
+//
+//        if (visitDTOList.isEmpty()) {
+//            throw new VisitNotFoundException("couldn't find visits");
+//        }
+//
+//        return new ResponseEntity<>(new ResponseUtil<>(
+//                HttpStatus.OK.value(), "successfully retrieved visits",
+//                visitDTOList.get()),
+//                HttpStatus.OK);
+//    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
-    public ResponseEntity<ResponseUtil<List<VisitDTO>>> getAllVisits() {
+    public ResponseEntity<ResponseUtil<List<VisitDTO>>>
+    getAllVisitsByDates(@RequestParam("start")Long start,@RequestParam("end")Long end) {
 
-        Optional<List<VisitDTO>> visitDTOList = Optional.ofNullable(visitService.readAllVisits());
+        List<VisitDTO> visitDTOS;
 
-        if (visitDTOList.isEmpty()) {
-            throw new VisitNotFoundException("couldn't find visits");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        boolean isStartDatePresent = start!=0;
+        boolean isEndDatePresent = end!=0;
+
+        if(isStartDatePresent&&isEndDatePresent){
+
+            visitDTOS = visitService.findVisitsByBetweenDays(
+                    dateFormat.format(new Date(start)),
+                    dateFormat.format(new Date(end)),
+                    EntityDbStatus.ACTIVE);
+        }
+        else if(isEndDatePresent){
+
+            visitDTOS = visitService.findVisitsUntilGivenDate(
+                    dateFormat.format(new Date(end)),
+                    EntityDbStatus.ACTIVE);
+
+        }else if(isStartDatePresent){
+
+            visitDTOS = visitService.findVisitsByBetweenDays(
+                    dateFormat.format(new Date(start)),
+                    dateFormat.format(new Date(System.currentTimeMillis())),
+                    EntityDbStatus.ACTIVE
+            );
+
+        }else{
+            visitDTOS = visitService.findAllVisitsByDbStatus(EntityDbStatus.ACTIVE);
+        }
+
+        if(visitDTOS==null){
+            throw new VisitNotFoundException("couldn't find visits:(");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(), "successfully retrieved visits",
-                visitDTOList.get()),
+                visitDTOS),
                 HttpStatus.OK);
     }
+
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
@@ -99,9 +150,9 @@ public class VisitRestController {
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitById(@PathVariable int id){
 
-        Optional<String> optional = Optional.ofNullable(visitService.deleteVisitById(id));
+        int count = visitService.updateVisitDbStatusById(EntityDbStatus.DELETED,id);
 
-        if(optional.isEmpty()){
+        if(count<=0){
             throw new VisitNotFoundException("couldn't find visit - "+id);
         }
 

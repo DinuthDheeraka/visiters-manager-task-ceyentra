@@ -4,6 +4,8 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorNotFoundException;
 import com.ceyentra.springboot.visitersmanager.repository.VisitorRepository;
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
@@ -49,7 +51,28 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public VisitorDTO updateVisitor(VisitorDTO visitorDTO) {
-        VisitorEntity save = visitorDAO.save(modelMapper.map(visitorDTO, VisitorEntity.class));
+
+        Optional<VisitorDTO> optional = Optional.ofNullable(readVisitorById(visitorDTO.getVisitorId()));
+
+        if(optional.isEmpty()){
+            throw new VisitorNotFoundException("couldn't find visitor - "+visitorDTO.getVisitorId());
+        }
+
+        VisitorDTO currentVisitorDto = optional.get();
+
+        currentVisitorDto.setFirstName(visitorDTO.getFirstName()==null?
+                currentVisitorDto.getFirstName() : visitorDTO.getFirstName());
+
+        currentVisitorDto.setLastName(visitorDTO.getLastName()==null?
+                currentVisitorDto.getLastName() : visitorDTO.getLastName());
+
+        currentVisitorDto.setNic(visitorDTO.getNic()==null?
+                currentVisitorDto.getNic() : visitorDTO.getNic());
+
+        currentVisitorDto.setPhone(visitorDTO.getPhone()==null?
+                currentVisitorDto.getPhone() : visitorDTO.getPhone());
+
+        VisitorEntity save = visitorDAO.save(modelMapper.map(currentVisitorDto, VisitorEntity.class));
         return modelMapper.map(save, VisitorDTO.class);
     }
 
@@ -104,5 +127,17 @@ public class VisitorServiceImpl implements VisitorService {
             visitDTOS.add(visitDTO);
         }
         return visitDTOS;
+    }
+
+    @Override
+    public int updateVisitorDbStatusById(EntityDbStatus status, int id) {
+        return visitorDAO.updateVisitorDbStatusById(status.name(),id);
+    }
+
+    @Override
+    public List<VisitorDTO> findVisitorsByDbStatus(EntityDbStatus status) {
+        return modelMapper.map(visitorDAO.findVisitorsByDbStatus(status.name()),
+                new TypeToken<ArrayList<VisitorDTO>>() {
+                }.getType());
     }
 }

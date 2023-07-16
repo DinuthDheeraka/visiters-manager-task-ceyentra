@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
 import com.ceyentra.springboot.visitersmanager.repository.VisitRepository;
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
@@ -19,6 +20,7 @@ import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
+import com.ceyentra.springboot.visitersmanager.util.convert.CustomConvertor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +43,8 @@ public class VisitServiceImpl implements VisitService {
 
     private final ModelMapper modelMapper;
 
+    private final CustomConvertor convertor;
+
     @Override
     public List<VisitDTO> readAllVisits() {
 
@@ -47,32 +52,7 @@ public class VisitServiceImpl implements VisitService {
 
         if (visitDTOList.isPresent()) {
 
-            List<VisitDTO> visitDTOS = new ArrayList();
-
-            for (VisitEntity visit : visitDTOList.get()) {
-
-                //visitDTO
-                VisitDTO visitDTO = new VisitDTO(
-                        visit.getVisitId(), visit.getCheckInDate(),
-                        visit.getCheckInTime(), visit.getCheckOutTime(),
-                        visit.getReason(), visit.getVisitStatus());
-
-                //visitorDTO
-                VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
-
-                //visitorCardDTO
-                VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
-
-                //floorDTO
-                FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
-
-                visitDTO.setVisitor(visitorDTO);
-                visitDTO.setVisitorCard(visitorCardDTO);
-                visitDTO.setFloor(floorDTO);
-
-                visitDTOS.add(visitDTO);
-            }
-            return visitDTOS;
+            return convertor.convert(visitDTOList.get());
         }
         return null;
     }
@@ -190,6 +170,7 @@ public class VisitServiceImpl implements VisitService {
     public String deleteVisitById(int id) {
         Optional<VisitEntity> byId = visitDAO.findById(id);
         if(byId.isPresent()){
+            visitorCardService.updateVisitorCardStatusById(VisitorCardStatus.NOT_IN_USE.name(),byId.get().getVisitorCard().getCardId());
             visitDAO.deleteById(id);
             return "deleted visit";
         }
@@ -197,8 +178,54 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public VisitDTO updateVisitStatusById(int id, VisitStatus visitStatus) {
-        visitDAO.updateVisitStatusById(visitStatus.name(), id);
+    public List<VisitDTO> findVisitsByBetweenDays(String startDate, String endDate ,EntityDbStatus dbStatus) {
+
+        System.out.println(startDate+" "+endDate);
+
+        Optional<List<VisitEntity>> visits = Optional.ofNullable(visitDAO.findVisitsByDateRange(startDate, endDate,dbStatus.name()));
+
+        if(visits.isPresent()){
+            return convertor.convert(visits.get());
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public List<VisitDTO> findVisitsUntilGivenDate(String endDate,EntityDbStatus entityDbStatus) {
+
+        System.out.println(endDate);
+
+        Optional<List<VisitEntity>> visits = Optional.ofNullable(visitDAO.findVisitsUntilGivenDate(endDate,entityDbStatus.name()));
+
+        if(visits.isPresent()){
+            return convertor.convert(visits.get());
+        }
+
         return null;
     }
+
+    @Override
+    public List<VisitDTO> findAllVisitsByDbStatus(EntityDbStatus dbStatus) {
+
+        Optional<List<VisitEntity>> optional = Optional.ofNullable(visitDAO.findAllVisitsByDbStatus(dbStatus.name()));
+
+        if(optional.isPresent()){
+            return convertor.convert(optional.get());
+        }
+
+        return null;
+    }
+
+    @Override
+    public int updateVisitDbStatusById(EntityDbStatus status, int id) {
+
+        VisitDTO visitDTO = readVisitById(id);
+
+        visitorCardService.updateVisitorCardStatusById(VisitorCardStatus.NOT_IN_USE.name(),visitDTO.getVisitorCard().getCardId());
+
+        return visitDAO.updateVisitDbStatusById(status.name(),id);
+    }
+
 }

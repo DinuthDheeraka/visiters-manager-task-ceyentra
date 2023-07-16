@@ -6,6 +6,7 @@ package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitorNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
@@ -35,7 +36,7 @@ public class VisitorRestController {
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorDTO>>> getAllVisitors() {
 
-        Optional<List<VisitorDTO>> optionalVisitorDTOS = Optional.ofNullable(visitorService.readAllVisitors());
+        Optional<List<VisitorDTO>> optionalVisitorDTOS = Optional.ofNullable(visitorService.findVisitorsByDbStatus(EntityDbStatus.ACTIVE));
 
         if (optionalVisitorDTOS.isEmpty()) {
             throw new VisitorNotFoundException("unable to find visitors");
@@ -108,15 +109,15 @@ public class VisitorRestController {
     @PreAuthorize("hasAuthority('admin:delete') or hasAuthority('receptionist:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitor(@PathVariable int id) {
 
-        Optional<String> response = Optional.ofNullable(visitorService.deleteVisitorById(id));
+        int count = visitorService.updateVisitorDbStatusById(EntityDbStatus.DELETED,id);
 
-        if (response.isEmpty()) {
+        if (count<=0) {
             throw new VisitorNotFoundException("couldn't find visitor - " + id);
         }
 
         return new ResponseEntity(new ResponseUtil<>(
                 HttpStatus.OK.value(), "deleted visitor successfully",
-                response.get()),
+                "deleted visitor - "+id),
                 HttpStatus.OK);
     }
 

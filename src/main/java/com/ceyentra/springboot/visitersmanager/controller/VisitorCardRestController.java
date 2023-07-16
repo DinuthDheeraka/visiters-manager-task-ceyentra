@@ -5,6 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
@@ -33,7 +34,9 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getAllVisitorCards() {
 
-        Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readAllVisitorCard());
+        Optional<List<VisitorCardDTO>> optional = Optional
+                .ofNullable(visitorCardService
+                        .findVisitorCardsByDbStatus(EntityDbStatus.ACTIVE));
 
         if (optional.isEmpty()) {
             throw new VisitorCardNotFoundException("couldn't find visitor cards");
@@ -118,16 +121,16 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitorCardById(@PathVariable int id) {
 
-        Optional<String> optional = Optional.ofNullable(visitorCardService.deleteVisitorCardBYId(id));
+        int count = visitorCardService.updateVisitorCardDbStatusById(EntityDbStatus.DELETED,id);
 
-        if (optional.isEmpty()) {
+        if (count<=0) {
             throw new VisitorCardNotFoundException("couldn't find visitor card - "+id);
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
                 "successfully deleted visitor card",
-                optional.get()),
+                "deleted visitor card - "+id),
                 HttpStatus.OK);
     }
 }

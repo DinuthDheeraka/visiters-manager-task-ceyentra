@@ -1,6 +1,7 @@
 package com.ceyentra.springboot.visitersmanager.service;
 
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 
 import java.util.List;
 
@@ -15,4 +16,8 @@ public interface FloorService {
     String deleteFloorById(int id);
 
     FloorDTO saveFloor(FloorDTO floorDTO);
+
+    int updateFloorDbStatusById(EntityDbStatus status,int id);
+
+    List<FloorDTO> selectFloorsByDbStatus(EntityDbStatus entityDbStatus);
 }

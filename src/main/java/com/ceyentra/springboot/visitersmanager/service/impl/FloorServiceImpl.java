@@ -4,6 +4,9 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
+import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
+import com.ceyentra.springboot.visitersmanager.exceptions.FloorNotFoundException;
 import com.ceyentra.springboot.visitersmanager.repository.FloorRepository;
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.FloorEntity;
@@ -47,7 +50,24 @@ public class FloorServiceImpl implements FloorService {
 
     @Override
     public FloorDTO updateFloor(FloorDTO floorDTO) {
-        FloorEntity save = floorDAO.save(modelMapper.map(floorDTO, FloorEntity.class));
+
+        Optional<FloorDTO> optional = Optional.ofNullable(readFloorById(floorDTO.getFloorId()));
+
+        if(optional.isEmpty()){
+            throw new FloorNotFoundException("couldn't find floor - "+floorDTO.getFloorId());
+        }
+
+        FloorDTO currentFloorDTO = optional.get();
+
+        currentFloorDTO.setFloorName(floorDTO.getFloorName()==null?
+                currentFloorDTO.getFloorName() : floorDTO.getFloorName());
+
+        currentFloorDTO.setFloorNumber(floorDTO.getFloorNumber()==null?
+                currentFloorDTO.getFloorNumber() : floorDTO.getFloorNumber());
+
+
+        FloorEntity save = floorDAO.save(modelMapper.map(currentFloorDTO, FloorEntity.class));
+
         return modelMapper.map(save, FloorDTO.class);
     }
 
@@ -66,5 +86,17 @@ public class FloorServiceImpl implements FloorService {
         floorDTO.setFloorId(0);
         FloorEntity save = floorDAO.save(modelMapper.map(floorDTO, FloorEntity.class));
         return modelMapper.map(save, FloorDTO.class);
+    }
+
+    @Override
+    public int updateFloorDbStatusById(EntityDbStatus status, int id) {
+        return floorDAO.setFloorDbStatusById(status.name(),id);
+    }
+
+    @Override
+    public List<FloorDTO> selectFloorsByDbStatus(EntityDbStatus entityDbStatus) {
+        return modelMapper.map(floorDAO.selectFloorsByDbStatus(entityDbStatus.name()),
+                new TypeToken<ArrayList<FloorDTO>>() {
+                }.getType());
     }
 }

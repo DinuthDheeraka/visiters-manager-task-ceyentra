@@ -5,6 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.FloorNotFoundException;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
@@ -34,7 +35,7 @@ public class FloorRestController {
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<FloorDTO>>> getAllVisitorCard() {
 
-        Optional<List<FloorDTO>> optional = Optional.ofNullable(floorService.readAllFloors());
+        Optional<List<FloorDTO>> optional = Optional.ofNullable(floorService.selectFloorsByDbStatus(EntityDbStatus.ACTIVE));
 
         if (optional.isEmpty()) {
             throw new FloorNotFoundException("unable to find floors");
@@ -98,15 +99,15 @@ public class FloorRestController {
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteFloorById(@PathVariable int id) {
 
-        Optional<String> optional = Optional.ofNullable(floorService.deleteFloorById(id));
+        int count = floorService.updateFloorDbStatusById(EntityDbStatus.DELETED,id);
 
-        if (optional.isEmpty()) {
+        if (count<=0) {
             throw new FloorNotFoundException("unable to find floor - "+id);
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
                 "successfully deleted floor",
-                optional.get()),
+                "deleted floor - "+id),
                 HttpStatus.OK);
     }
 }

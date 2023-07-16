@@ -1,10 +1,14 @@
 package com.ceyentra.springboot.visitersmanager.config.config;
 
+import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
+import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
+import com.ceyentra.springboot.visitersmanager.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,9 +17,11 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
   @Value("${application.security.jwt.secret-key}")
@@ -24,6 +30,8 @@ public class JwtService {
   private long jwtExpiration;
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
+
+  private final UserService userService;
 
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
@@ -35,9 +43,22 @@ public class JwtService {
   }
 
   public String generateToken(UserDetails userDetails) {
-    //extra claims apply here
+    //find user base on token
+    Optional<UserEntity> user = userService.findByEmail(userDetails.getUsername());
+
+    //extra details
     HashMap<String,Object> hashMap = new HashMap<>();
-    return generateToken(new HashMap<>(), userDetails);
+
+    if(user.isPresent()){
+      hashMap.put("User-Id",user.get().getId());
+      hashMap.put("First Name",user.get().getFirstname());
+      hashMap.put("Last Name",user.get().getLastname());
+      hashMap.put("Email",user.get().getEmail());
+      hashMap.put("Password",user.get().getPassword());
+      hashMap.put("Role",user.get().getRole());
+    }
+
+    return generateToken(hashMap, userDetails);
   }
 
   public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -45,8 +66,22 @@ public class JwtService {
   }
 
   public String generateRefreshToken(UserDetails userDetails) {
-    //extra claims apply here
+
+    //find user base on token
+    Optional<UserEntity> user = userService.findByEmail(userDetails.getUsername());
+
+    //extra details
     HashMap<String,Object> hashMap = new HashMap<>();
+
+    if(user.isPresent()){
+      hashMap.put("User-Id",user.get().getId());
+      hashMap.put("First Name",user.get().getFirstname());
+      hashMap.put("Last Name",user.get().getLastname());
+      hashMap.put("Email",user.get().getEmail());
+      hashMap.put("Password",user.get().getPassword());
+      hashMap.put("Role",user.get().getRole());
+    }
+
     return buildToken(hashMap, userDetails, refreshExpiration);
   }
 
