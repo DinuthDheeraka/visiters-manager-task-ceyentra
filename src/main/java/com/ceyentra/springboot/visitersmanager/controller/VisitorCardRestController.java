@@ -37,12 +37,12 @@ public class VisitorCardRestController {
                         .findVisitorCardsByDbStatus(EntityDbStatus.ACTIVE));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardException("couldn't find visitor cards");
+            throw new VisitorCardException("Couldn't find Visitor Cards Details.");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                "successfully retrieved visitor cards",
+                "Successfully Retrieved Visitor Cards Details",
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -53,15 +53,13 @@ public class VisitorCardRestController {
 
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.readVisitorCardById(id));
 
-        System.out.println(optional.get().getDbStatus());
-
-        if (optional.isEmpty() || optional.get().getDbStatus()==EntityDbStatus.DELETED) {
-            throw new VisitorCardException("couldn't find visitor card - "+id);
+        if (optional.isEmpty() || optional.get().getDbStatus() == EntityDbStatus.DELETED) {
+            throw new VisitorCardException(String.format("Couldn't find Visitor Card with Associate ID - %d", id));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                "successfully retrieved visitor card -"+id,
+                String.format("Successfully Retrieved Visitor Card details for Associate ID - %d", id),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -73,12 +71,12 @@ public class VisitorCardRestController {
         Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readVisitorCardByStatus(status));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardException("couldn't find visitor cards with status - "+status);
+            throw new VisitorCardException(String.format("Couldn't find Visitor Cards with Status - %s", status));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                "successfully retrieved visitor cards with status - "+status,
+                String.format("Successfully Retrieved Visitor Cards with status - %s", status),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -90,12 +88,12 @@ public class VisitorCardRestController {
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.updateVisitorCard(visitorCardDTO));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardException("couldn't update visitor cards - "+visitorCardDTO.getCardId());
+            throw new VisitorCardException(String.format("Couldn't Update Visitor Card with Associate ID - %d.", visitorCardDTO.getCardId()));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                "successfully updated visitor card - "+visitorCardDTO.getCardId(),
+                String.format("Successfully Updated Visitor Card with Given ID - %d.", visitorCardDTO.getCardId()),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -107,12 +105,12 @@ public class VisitorCardRestController {
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.saveVisitorCard(visitorCardDTO));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardException("couldn't save visitor card");
+            throw new VisitorCardException("Couldn't save Visitor Card.");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                "successfully saved visitor card - "+optional.get().getCardId(),
+                String.format("Successfully Saved Visitor Card with ID - %d.",optional.get().getCardId()),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -121,16 +119,16 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitorCardById(@PathVariable int id) {
 
-        int count = visitorCardService.updateVisitorCardDbStatusById(EntityDbStatus.DELETED,id);
+        int count = visitorCardService.updateVisitorCardDbStatusById(EntityDbStatus.DELETED, id);
 
-        if (count<=0) {
-            throw new VisitorCardException("couldn't find visitor card - "+id);
+        if (count <= 0) {
+            throw new VisitorCardException(String.format("Couldn't find Visitor Card with Associate ID - %d" ,id));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                "successfully deleted visitor card",
-                "deleted visitor card - "+id),
+                "Successfully Deleted Visitor Card.",
+                String.format("Deleted Visitor Card with ID - %d.",id)),
                 HttpStatus.OK);
     }
 }

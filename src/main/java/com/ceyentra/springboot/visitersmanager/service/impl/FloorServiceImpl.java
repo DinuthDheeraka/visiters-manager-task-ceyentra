@@ -4,11 +4,11 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
+import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
+import com.ceyentra.springboot.visitersmanager.entity.FloorEntity;
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.FloorException;
 import com.ceyentra.springboot.visitersmanager.repository.FloorRepository;
-import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
-import com.ceyentra.springboot.visitersmanager.entity.FloorEntity;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,66 +31,136 @@ public class FloorServiceImpl implements FloorService {
 
     @Override
     public FloorDTO readFloorById(int id) {
-        return modelMapper.map(floorDAO.findById(id), FloorDTO.class);
+        try {
+            Optional<FloorEntity> byId = floorDAO.findById(id);
+
+            if (byId.isEmpty() || byId.get().getDbStatus()==EntityDbStatus.DELETED) {
+                throw new FloorException(String.format("Unable to find Floor with Associate ID - %d.", id));
+            }
+
+            return modelMapper.map(byId.get(), FloorDTO.class);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public List<FloorDTO> readAllFloors() {
-        return modelMapper.map(floorDAO.findAll(),
-                new TypeToken<ArrayList<FloorDTO>>() {
-                }.getType());
+
+        try {
+            Optional<List<FloorEntity>> all = Optional.of(floorDAO.findAll());
+
+            return modelMapper.map(all.get(),
+                    new TypeToken<ArrayList<FloorDTO>>() {
+                    }.getType());
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public FloorDTO updateFloor(FloorDTO floorDTO) {
 
-        Optional<FloorDTO> optional = Optional.ofNullable(readFloorById(floorDTO.getFloorId()));
+        try {
 
-        if(optional.isEmpty()){
-            throw new FloorException(String.format("Unable to Update Floor Details with Associate ID - %d",floorDTO.getFloorId()));
+            Optional<FloorDTO> optional = Optional.ofNullable(readFloorById(floorDTO.getFloorId()));
+
+            if (optional.isEmpty()) {
+                throw new FloorException(String.format("Unable to Update Floor Details with Associate ID - %d", floorDTO.getFloorId()));
+            }
+
+            FloorDTO currentFloorDTO = optional.get();
+
+            currentFloorDTO.setFloorName(floorDTO.getFloorName() == null ?
+                    currentFloorDTO.getFloorName() : floorDTO.getFloorName());
+
+            currentFloorDTO.setFloorNumber(floorDTO.getFloorNumber() == null ?
+                    currentFloorDTO.getFloorNumber() : floorDTO.getFloorNumber());
+
+            FloorEntity save = floorDAO.save(modelMapper.map(currentFloorDTO, FloorEntity.class));
+
+            return modelMapper.map(save, FloorDTO.class);
+
+        } catch (Exception e) {
+            throw e;
         }
-
-        FloorDTO currentFloorDTO = optional.get();
-
-        currentFloorDTO.setFloorName(floorDTO.getFloorName()==null?
-                currentFloorDTO.getFloorName() : floorDTO.getFloorName());
-
-        currentFloorDTO.setFloorNumber(floorDTO.getFloorNumber()==null?
-                currentFloorDTO.getFloorNumber() : floorDTO.getFloorNumber());
-
-
-        FloorEntity save = floorDAO.save(modelMapper.map(currentFloorDTO, FloorEntity.class));
-
-        return modelMapper.map(save, FloorDTO.class);
     }
 
     @Override
     public String deleteFloorById(int id) {
-        Optional<FloorEntity> byId = floorDAO.findById(id);
-        if (byId.isPresent()) {
+
+        try {
+
+            Optional<FloorEntity> byId = floorDAO.findById(id);
+
+            if (byId.isEmpty()) {
+                throw new FloorException(String.format("Unable to Find Floor with Associate ID - %d.", id));
+            }
+
             floorDAO.deleteById(id);
-            return "deleted floor - " + id;
+
+            return "Deleted";
+
+        } catch (Exception e) {
+            throw e;
         }
-        return null;
     }
 
     @Override
     public FloorDTO saveFloor(FloorDTO floorDTO) {
-        floorDTO.setFloorId(0);
-        floorDTO.setEntityDbStatus(EntityDbStatus.ACTIVE);
-        FloorEntity save = floorDAO.save(modelMapper.map(floorDTO, FloorEntity.class));
-        return modelMapper.map(save, FloorDTO.class);
+
+        try {
+
+            floorDTO.setFloorId(0);
+            floorDTO.setEntityDbStatus(EntityDbStatus.ACTIVE);
+
+            return modelMapper.map(floorDAO.save(modelMapper.map(
+                    floorDTO,
+                    FloorEntity.class)),
+                    FloorDTO.class);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public int updateFloorDbStatusById(EntityDbStatus status, int id) {
-        return floorDAO.setFloorDbStatusById(status.name(),id);
+
+        try{
+
+            int count = floorDAO.setFloorDbStatusById(status.name(), id);
+
+            if(count<=0){
+                throw new FloorException(String.format("Unable to Find Floor with Associate ID - %d.",id));
+            }
+
+            return count;
+
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     @Override
     public List<FloorDTO> selectFloorsByDbStatus(EntityDbStatus entityDbStatus) {
-        return modelMapper.map(floorDAO.selectFloorsByDbStatus(entityDbStatus.name()),
-                new TypeToken<ArrayList<FloorDTO>>() {
-                }.getType());
+
+        try{
+
+            Optional<List<FloorEntity>> floorEntities = Optional.ofNullable(floorDAO.selectFloorsByDbStatus(entityDbStatus.name()));
+
+            if(floorEntities.isEmpty()){
+                throw new FloorException("There are no any Registered Floors.");
+            }
+
+            return modelMapper.map(floorEntities.get(),
+                    new TypeToken<ArrayList<FloorDTO>>() {
+                    }.getType());
+
+        }catch (Exception e){
+            throw e;
+        }
     }
 }

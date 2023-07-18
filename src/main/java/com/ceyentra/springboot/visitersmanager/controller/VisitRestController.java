@@ -52,7 +52,7 @@ public class VisitRestController {
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitDTO>>>
-    getAllVisitsByDates(@RequestParam("start")Long start,@RequestParam("end")Long end) {
+    getAllVisitsByDates(@RequestParam("start") Long start, @RequestParam("end") Long end) {
 
         List<VisitDTO> visitDTOS;
 
@@ -60,15 +60,15 @@ public class VisitRestController {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        if((start!=null)&&(end!=null)){
+        if ((start != null) && (end != null)) {
 
             Date startDate;
             Date endDate;
 
-            try{
+            try {
                 startDate = new Date(start);
                 endDate = new Date(end);
-            }catch (IllegalArgumentException | ArithmeticException exception){
+            } catch (IllegalArgumentException | ArithmeticException exception) {
                 throw new RuntimeException("Unable to process.Invalid value for start Date or end Date.");
             }
 
@@ -80,14 +80,13 @@ public class VisitRestController {
             message = String.format("Visits Details for %s to %s",
                     dateFormat.format(new Date(start)),
                     dateFormat.format(new Date(end)));
-        }
-        else if(end!=null){
+        } else if (end != null) {
 
             Date endDate;
 
-            try{
+            try {
                 endDate = new Date(end);
-            }catch (IllegalArgumentException | ArithmeticException exception){
+            } catch (IllegalArgumentException | ArithmeticException exception) {
                 throw new RuntimeException("Unable to process.Invalid value for end Date.");
             }
 
@@ -98,13 +97,13 @@ public class VisitRestController {
             message = String.format("Visits Details Until %s",
                     dateFormat.format(new Date(end)));
 
-        }else if(start!=null){
+        } else if (start != null) {
 
             Date startDate;
 
-            try{
+            try {
                 startDate = new Date(start);
-            }catch (IllegalArgumentException | ArithmeticException exception){
+            } catch (IllegalArgumentException | ArithmeticException exception) {
                 throw new RuntimeException("Unable to process.Invalid value for start Date.");
             }
 
@@ -117,12 +116,12 @@ public class VisitRestController {
             message = String.format("Visits Details From %s",
                     dateFormat.format(new Date(start)));
 
-        }else{
+        } else {
             visitDTOS = visitService.findAllVisitsByDbStatus(EntityDbStatus.ACTIVE);
             message = "Successfully Retrieved Visit Details";
         }
 
-        if(visitDTOS==null){
+        if (visitDTOS == null) {
             throw new VisitException("Unable to find Visit Details.");
         }
 
@@ -133,19 +132,19 @@ public class VisitRestController {
                 HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<VisitDTO>> getVisitById(@PathVariable int id) {
 
         Optional<VisitDTO> optionalVisitDTO = Optional.ofNullable(visitService.readVisitById(id));
 
-        if (optionalVisitDTO.isEmpty() || optionalVisitDTO.get().getDbStatus()==EntityDbStatus.DELETED) {
-            throw new VisitException("couldn't find visit - " + id);
+        if (optionalVisitDTO.isEmpty() || optionalVisitDTO.get().getDbStatus() == EntityDbStatus.DELETED) {
+            throw new VisitException(String.format("Couldn't find Visit Details with Associate ID - %d.", id));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
-                HttpStatus.OK.value(), "successfully retrieved visit -" + id,
+                HttpStatus.OK.value(),
+                String.format("Successfully Retrieved Visit Details for Visit ID - %d", id),
                 optionalVisitDTO.get()),
                 HttpStatus.OK);
     }
@@ -166,12 +165,10 @@ public class VisitRestController {
 
         visitService.saveVisit(requestVisitDTO);
 
-        return new ResponseEntity<>(
-                new ResponseUtil<>(
-                        HttpStatus.CREATED.value(),
-                        "successfully saved visit details",
-                        "success"
-                ),
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.CREATED.value(),
+                "Successfully saved Visit Details.",
+                String.format("Successfully Checked In Visitor - %d", requestVisitDTO.getVisitorId())),
                 HttpStatus.CREATED);
     }
 
@@ -179,34 +176,29 @@ public class VisitRestController {
     @PreAuthorize("hasAuthority('admin:update') or hasAuthority('receptionist:update')")
     public ResponseEntity<ResponseUtil<String>> updateVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
 
-        System.out.println(requestVisitDTO);
         visitService.updateVisitById(requestVisitDTO);
 
-        return new ResponseEntity<>(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(),
-                        "successfully updated visit details",
-                        "updated visit -"+requestVisitDTO.getVisitId()
-                ),
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "Successfully Updated Visit Details.",
+                String.format("Updated Visit Details with Associate ID - %d", requestVisitDTO.getVisitId())),
                 HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public ResponseEntity<ResponseUtil<String>> deleteVisitById(@PathVariable int id){
+    public ResponseEntity<ResponseUtil<String>> deleteVisitById(@PathVariable int id) {
 
-        int count = visitService.updateVisitDbStatusById(EntityDbStatus.DELETED,id);
+        int count = visitService.updateVisitDbStatusById(EntityDbStatus.DELETED, id);
 
-        if(count<=0){
-            throw new VisitException("couldn't find visit - "+id);
+        if (count <= 0) {
+            throw new VisitException(String.format("Unable to find Visit with given ID - %d.", id));
         }
 
-        return new ResponseEntity<>(
-                new ResponseUtil<>(
-                        HttpStatus.OK.value(),
-                        "successfully deleted visit",
-                        "deleted visit - "+id
-                ),
+        return new ResponseEntity<>(new ResponseUtil<>(
+                HttpStatus.OK.value(),
+                "Successfully Deleted Visit.",
+                String.format("Deleted Visit ID - %d.", id)),
                 HttpStatus.OK);
     }
 }
