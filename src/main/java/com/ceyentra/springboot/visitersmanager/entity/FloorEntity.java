@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,23 +28,16 @@ public class FloorEntity {
     @Column(name = "floor_name")
     String floorName;
 
+    @Column(name = "db_status")
+    @Enumerated(EnumType.STRING)
+    EntityDbStatus dbStatus;
+
     @OneToMany(
             mappedBy = "floor",
             cascade = {
                     CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.PERSIST, CascadeType.REFRESH})
     List<VisitEntity> visitList;
-
-    public FloorEntity(String floorNumber, String floorName) {
-        this.floorNumber = floorNumber;
-        this.floorName = floorName;
-    }
-
-    public FloorEntity(int floorId, String floorNumber, String floorName) {
-        this.floorId = floorId;
-        this.floorNumber = floorNumber;
-        this.floorName = floorName;
-    }
 
     @Override
     public String toString() {

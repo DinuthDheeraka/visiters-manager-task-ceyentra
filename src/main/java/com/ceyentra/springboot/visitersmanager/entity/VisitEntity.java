@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -56,6 +57,10 @@ public class VisitEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     VisitStatus visitStatus;
+
+    @Column(name = "db_status")
+    @Enumerated(EnumType.STRING)
+    EntityDbStatus dbStatus;
 
     public VisitEntity(LocalDate checkInDate, LocalTime checkInTime,
                        LocalTime checkOutTime, String reason,

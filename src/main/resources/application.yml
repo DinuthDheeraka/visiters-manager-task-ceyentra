@@ -4,6 +4,10 @@ spring:
     username: springstudent
     password: springstudent
 
+  main:
+    banner-mode: off
+
+
 application:
   security:
     jwt:

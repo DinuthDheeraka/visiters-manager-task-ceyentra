@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.dto;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,8 @@ public class VisitorCardDTO {
     String cardType;
 
     VisitorCardStatus visitorCardStatus;
+
+    EntityDbStatus dbStatus;
 
     public VisitorCardDTO(int cardId, String cardNumber, String cardType, VisitorCardStatus visitorCardStatus) {
         this.cardId = cardId;

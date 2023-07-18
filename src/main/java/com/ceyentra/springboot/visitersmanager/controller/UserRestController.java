@@ -5,7 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
-import com.ceyentra.springboot.visitersmanager.exceptions.SystemUserNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.UserException;
 import com.ceyentra.springboot.visitersmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +38,7 @@ public class UserRestController {
     public UserDTO getUserById(@PathVariable int id){
         Optional<UserDTO> optional = Optional.ofNullable(userService.readUserById(id));
         if(optional.isEmpty()){
-            throw new SystemUserNotFoundException("user with id -"+id+" not found");
+            throw new UserException("user with id -"+id+" not found");
         }
         return optional.get();
     }

@@ -7,6 +7,7 @@ import com.ceyentra.springboot.visitersmanager.dto.response.AuthenticationRespon
 import com.ceyentra.springboot.visitersmanager.entity.TokenEntity;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
 import com.ceyentra.springboot.visitersmanager.enums.TokenType;
+import com.ceyentra.springboot.visitersmanager.exceptions.UserException;
 import com.ceyentra.springboot.visitersmanager.repository.TokenRepository;
 import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,6 +40,12 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponseDTO register(RegisterRequestDTO request) {
+
+        Optional<UserEntity> byEmail = repository.findByEmail(request.getEmail());
+        if (byEmail.isPresent()) {
+            throw new UserException(String.format("User with this email %s is Already Registered",request.getEmail()));
+        }
+
         var user = UserEntity.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())

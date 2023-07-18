@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class VisitEntityDtoConvertor implements CustomConvertor<VisitEntity, Vis
     @Override
     public List<VisitDTO> convert(List<VisitEntity> visitEntityList) {
 
-        List<VisitDTO> visitDTOS = visitEntityList
+        return visitEntityList
                 .stream()
                 .map(visit -> {
                     //visitDTO
@@ -53,6 +52,6 @@ public class VisitEntityDtoConvertor implements CustomConvertor<VisitEntity, Vis
                 })
                 .collect(Collectors.toList());
 
-        return visitDTOS;
+//        return visitDTOS;
     }
 }

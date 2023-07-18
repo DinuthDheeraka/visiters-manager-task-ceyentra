@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.dto;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,6 +21,8 @@ public class FloorDTO {
     String floorNumber;
 
     String floorName;
+
+    EntityDbStatus entityDbStatus;
 
     public FloorDTO(int floorId, String floorNumber, String floorName) {
         this.floorId = floorId;

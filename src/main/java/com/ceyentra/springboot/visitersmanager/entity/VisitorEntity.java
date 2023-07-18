@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,10 @@ public class VisitorEntity {
 
     @Column(name = "phone")
     String phone;
+
+    @Column(name = "db_status")
+    @Enumerated(EnumType.STRING)
+    EntityDbStatus dbStatus;
 
     @OneToMany(
             mappedBy = "visitor",

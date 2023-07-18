@@ -7,16 +7,19 @@ package com.ceyentra.springboot.visitersmanager.controller;
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.RequestVisitDTO;
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.VisitNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitException;
 import com.ceyentra.springboot.visitersmanager.service.VisitService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,14 +28,10 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/api/v1/visits")
 @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPTIONIST')")
+@RequiredArgsConstructor
 public class VisitRestController {
 
     private final VisitService visitService;
-
-    @Autowired
-    public VisitRestController(VisitService visitService) {
-        this.visitService = visitService;
-    }
 
 //    @GetMapping
 //    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
@@ -57,42 +56,79 @@ public class VisitRestController {
 
         List<VisitDTO> visitDTOS;
 
+        String message;
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        boolean isStartDatePresent = start!=0;
-        boolean isEndDatePresent = end!=0;
+        if((start!=null)&&(end!=null)){
 
-        if(isStartDatePresent&&isEndDatePresent){
+            Date startDate;
+            Date endDate;
+
+            try{
+                startDate = new Date(start);
+                endDate = new Date(end);
+            }catch (IllegalArgumentException | ArithmeticException exception){
+                throw new RuntimeException("Unable to process.Invalid value for start Date or end Date.");
+            }
 
             visitDTOS = visitService.findVisitsByBetweenDays(
-                    dateFormat.format(new Date(start)),
-                    dateFormat.format(new Date(end)),
+                    dateFormat.format(startDate),
+                    dateFormat.format(endDate),
                     EntityDbStatus.ACTIVE);
+
+            message = String.format("Visits Details for %s to %s",
+                    dateFormat.format(new Date(start)),
+                    dateFormat.format(new Date(end)));
         }
-        else if(isEndDatePresent){
+        else if(end!=null){
+
+            Date endDate;
+
+            try{
+                endDate = new Date(end);
+            }catch (IllegalArgumentException | ArithmeticException exception){
+                throw new RuntimeException("Unable to process.Invalid value for end Date.");
+            }
 
             visitDTOS = visitService.findVisitsUntilGivenDate(
-                    dateFormat.format(new Date(end)),
+                    dateFormat.format(endDate),
                     EntityDbStatus.ACTIVE);
 
-        }else if(isStartDatePresent){
+            message = String.format("Visits Details Until %s",
+                    dateFormat.format(new Date(end)));
+
+        }else if(start!=null){
+
+            Date startDate;
+
+            try{
+                startDate = new Date(start);
+            }catch (IllegalArgumentException | ArithmeticException exception){
+                throw new RuntimeException("Unable to process.Invalid value for start Date.");
+            }
 
             visitDTOS = visitService.findVisitsByBetweenDays(
-                    dateFormat.format(new Date(start)),
+                    dateFormat.format(startDate),
                     dateFormat.format(new Date(System.currentTimeMillis())),
                     EntityDbStatus.ACTIVE
             );
 
+            message = String.format("Visits Details From %s",
+                    dateFormat.format(new Date(start)));
+
         }else{
             visitDTOS = visitService.findAllVisitsByDbStatus(EntityDbStatus.ACTIVE);
+            message = "Successfully Retrieved Visit Details";
         }
 
         if(visitDTOS==null){
-            throw new VisitNotFoundException("couldn't find visits:(");
+            throw new VisitException("Unable to find Visit Details.");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
-                HttpStatus.OK.value(), "successfully retrieved visits",
+                HttpStatus.OK.value(),
+                message,
                 visitDTOS),
                 HttpStatus.OK);
     }
@@ -104,8 +140,8 @@ public class VisitRestController {
 
         Optional<VisitDTO> optionalVisitDTO = Optional.ofNullable(visitService.readVisitById(id));
 
-        if (optionalVisitDTO.isEmpty()) {
-            throw new VisitNotFoundException("couldn't find visit - " + id);
+        if (optionalVisitDTO.isEmpty() || optionalVisitDTO.get().getDbStatus()==EntityDbStatus.DELETED) {
+            throw new VisitException("couldn't find visit - " + id);
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
@@ -118,7 +154,16 @@ public class VisitRestController {
     @PreAuthorize("hasAuthority('admin:create') or hasAuthority('receptionist:create')")
     public ResponseEntity<ResponseUtil<String>> addVisit(@RequestBody RequestVisitDTO requestVisitDTO) {
 
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        //set current date
+        requestVisitDTO.setCheckInDate(LocalDate.now());
+
+        //set current time
+        requestVisitDTO.setCheckInTime(LocalTime.parse(timeFormat.format(LocalTime.now())));
+
         System.out.println(requestVisitDTO);
+
         visitService.saveVisit(requestVisitDTO);
 
         return new ResponseEntity<>(
@@ -153,7 +198,7 @@ public class VisitRestController {
         int count = visitService.updateVisitDbStatusById(EntityDbStatus.DELETED,id);
 
         if(count<=0){
-            throw new VisitNotFoundException("couldn't find visit - "+id);
+            throw new VisitException("couldn't find visit - "+id);
         }
 
         return new ResponseEntity<>(

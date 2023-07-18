@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.dto;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,6 @@ public class VisitorDTO {
     String lastName;
 
     String phone;
+
+    EntityDbStatus dbStatus;
 }

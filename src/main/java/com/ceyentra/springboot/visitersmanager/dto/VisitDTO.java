@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.dto;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,8 @@ public class VisitDTO {
     String reason;
 
     VisitStatus visitStatus;
+
+    EntityDbStatus dbStatus;
 
     public VisitDTO(int visitId, LocalDate checkInDate,
                     LocalTime checkInTime, LocalTime checkOutTime,

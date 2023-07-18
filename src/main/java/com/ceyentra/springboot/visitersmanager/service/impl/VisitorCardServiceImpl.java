@@ -5,7 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardException;
 import com.ceyentra.springboot.visitersmanager.repository.VisitorCardRepository;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.entity.VisitorCardEntity;
@@ -61,7 +61,7 @@ public class VisitorCardServiceImpl implements VisitorCardService {
         Optional<VisitorCardDTO> optional = Optional.ofNullable(readVisitorCardById(visitorCardDTO.getCardId()));
 
         if(optional.isEmpty()){
-            throw new VisitorCardNotFoundException("couldn't find visitor card - "+visitorCardDTO.getCardId());
+            throw new VisitorCardException("couldn't find visitor card - "+visitorCardDTO.getCardId());
         }
 
         VisitorCardDTO currentVisitorCardDTO = optional.get();

@@ -4,16 +4,15 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.FloorNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.FloorException;
 import com.ceyentra.springboot.visitersmanager.repository.FloorRepository;
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.FloorEntity;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +22,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class FloorServiceImpl implements FloorService {
 
     private final FloorRepository floorDAO;
 
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public FloorServiceImpl(FloorRepository floorDAO, ModelMapper modelMapper) {
-        this.floorDAO = floorDAO;
-        this.modelMapper = modelMapper;
-    }
-
 
     @Override
     public FloorDTO readFloorById(int id) {
@@ -54,7 +47,7 @@ public class FloorServiceImpl implements FloorService {
         Optional<FloorDTO> optional = Optional.ofNullable(readFloorById(floorDTO.getFloorId()));
 
         if(optional.isEmpty()){
-            throw new FloorNotFoundException("couldn't find floor - "+floorDTO.getFloorId());
+            throw new FloorException(String.format("Unable to Update Floor Details with Associate ID - %d",floorDTO.getFloorId()));
         }
 
         FloorDTO currentFloorDTO = optional.get();
@@ -84,6 +77,7 @@ public class FloorServiceImpl implements FloorService {
     @Override
     public FloorDTO saveFloor(FloorDTO floorDTO) {
         floorDTO.setFloorId(0);
+        floorDTO.setEntityDbStatus(EntityDbStatus.ACTIVE);
         FloorEntity save = floorDAO.save(modelMapper.map(floorDTO, FloorEntity.class));
         return modelMapper.map(save, FloorDTO.class);
     }

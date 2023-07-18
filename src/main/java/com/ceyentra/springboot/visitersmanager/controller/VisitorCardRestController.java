@@ -7,9 +7,10 @@ package com.ceyentra.springboot.visitersmanager.controller;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorCardException;
 import com.ceyentra.springboot.visitersmanager.service.VisitorCardService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,13 +23,10 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/api/v1/visitor_cards")
 @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPTIONIST')")
+@RequiredArgsConstructor
 public class VisitorCardRestController {
 
     private final VisitorCardService visitorCardService;
-
-    public VisitorCardRestController(VisitorCardService visitorCardService) {
-        this.visitorCardService = visitorCardService;
-    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
@@ -39,7 +37,7 @@ public class VisitorCardRestController {
                         .findVisitorCardsByDbStatus(EntityDbStatus.ACTIVE));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardNotFoundException("couldn't find visitor cards");
+            throw new VisitorCardException("couldn't find visitor cards");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
@@ -55,8 +53,10 @@ public class VisitorCardRestController {
 
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.readVisitorCardById(id));
 
-        if (optional.isEmpty()) {
-            throw new VisitorCardNotFoundException("couldn't find visitor card - "+id);
+        System.out.println(optional.get().getDbStatus());
+
+        if (optional.isEmpty() || optional.get().getDbStatus()==EntityDbStatus.DELETED) {
+            throw new VisitorCardException("couldn't find visitor card - "+id);
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
@@ -73,7 +73,7 @@ public class VisitorCardRestController {
         Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readVisitorCardByStatus(status));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardNotFoundException("couldn't find visitor cards with status - "+status);
+            throw new VisitorCardException("couldn't find visitor cards with status - "+status);
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
@@ -90,7 +90,7 @@ public class VisitorCardRestController {
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.updateVisitorCard(visitorCardDTO));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardNotFoundException("couldn't update visitor cards - "+visitorCardDTO.getCardId());
+            throw new VisitorCardException("couldn't update visitor cards - "+visitorCardDTO.getCardId());
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
@@ -107,7 +107,7 @@ public class VisitorCardRestController {
         Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.saveVisitorCard(visitorCardDTO));
 
         if (optional.isEmpty()) {
-            throw new VisitorCardNotFoundException("couldn't save visitor card");
+            throw new VisitorCardException("couldn't save visitor card");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(
@@ -124,7 +124,7 @@ public class VisitorCardRestController {
         int count = visitorCardService.updateVisitorCardDbStatusById(EntityDbStatus.DELETED,id);
 
         if (count<=0) {
-            throw new VisitorCardNotFoundException("couldn't find visitor card - "+id);
+            throw new VisitorCardException("couldn't find visitor card - "+id);
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(

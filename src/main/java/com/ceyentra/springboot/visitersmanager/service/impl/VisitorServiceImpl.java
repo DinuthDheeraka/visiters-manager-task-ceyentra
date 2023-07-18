@@ -5,7 +5,7 @@
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.VisitorNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorException;
 import com.ceyentra.springboot.visitersmanager.repository.VisitorRepository;
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
@@ -17,7 +17,6 @@ import com.ceyentra.springboot.visitersmanager.service.VisitorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +54,7 @@ public class VisitorServiceImpl implements VisitorService {
         Optional<VisitorDTO> optional = Optional.ofNullable(readVisitorById(visitorDTO.getVisitorId()));
 
         if(optional.isEmpty()){
-            throw new VisitorNotFoundException("couldn't find visitor - "+visitorDTO.getVisitorId());
+            throw new VisitorException("couldn't find visitor - "+visitorDTO.getVisitorId());
         }
 
         VisitorDTO currentVisitorDto = optional.get();

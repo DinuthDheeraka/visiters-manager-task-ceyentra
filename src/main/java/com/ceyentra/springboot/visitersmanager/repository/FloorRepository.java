@@ -18,4 +18,7 @@ public interface FloorRepository extends JpaRepository<FloorEntity,Integer> {
 
     @Query(value = "SELECT * FROM floor f WHERE f.db_status = :status",nativeQuery = true)
     List<FloorEntity> selectFloorsByDbStatus(@Param("status")String status);
+
+//    @Query(value = "SELECT db_status FROM floor WHERE floor_id = :id",nativeQuery = true)
+//    String findDbStatusByFloorId(@Param("id") int id);
 }

@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.VisitorCardStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -31,6 +32,10 @@ public class VisitorCardEntity {
     @Column(name = "card_status")
     @Enumerated(EnumType.STRING)
     VisitorCardStatus visitorCardStatus;
+
+    @Column(name = "db_status")
+    @Enumerated(EnumType.STRING)
+    EntityDbStatus dbStatus;
 
     @OneToMany(mappedBy = "visitorCard",
             cascade = {

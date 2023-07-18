@@ -6,9 +6,10 @@ package com.ceyentra.springboot.visitersmanager.controller;
 
 import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.FloorNotFoundException;
+import com.ceyentra.springboot.visitersmanager.exceptions.FloorException;
 import com.ceyentra.springboot.visitersmanager.service.FloorService;
 import com.ceyentra.springboot.visitersmanager.util.ResponseUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,27 +23,23 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/api/v1/floors")
 @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPTIONIST')")
+@RequiredArgsConstructor
 public class FloorRestController {
 
     private final FloorService floorService;
 
-    @Autowired
-    public FloorRestController(FloorService floorService) {
-        this.floorService = floorService;
-    }
-
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
-    public ResponseEntity<ResponseUtil<List<FloorDTO>>> getAllVisitorCard() {
+    public ResponseEntity<ResponseUtil<List<FloorDTO>>> getAllFloors() {
 
         Optional<List<FloorDTO>> optional = Optional.ofNullable(floorService.selectFloorsByDbStatus(EntityDbStatus.ACTIVE));
 
         if (optional.isEmpty()) {
-            throw new FloorNotFoundException("unable to find floors");
+            throw new FloorException("There are no any Registered Floors.");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully retrieved floors details",
+                "Successfully Retrieved Floors Details.",
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -53,12 +50,12 @@ public class FloorRestController {
 
         Optional<FloorDTO> optional = Optional.ofNullable(floorService.readFloorById(id));
 
-        if (optional.isEmpty()) {
-            throw new FloorNotFoundException("unable to find floor - "+id);
+        if (optional.isEmpty() || optional.get().getEntityDbStatus()==EntityDbStatus.DELETED) {
+            throw new FloorException(String.format("Unable to find Floor with Associate ID - %d.",id));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully retrieved floor details - "+id,
+                String.format("Successfully Retrieved Floor Details for Associate ID - %d.",id),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -70,11 +67,11 @@ public class FloorRestController {
         Optional<FloorDTO> optional = Optional.ofNullable(floorService.updateFloor(floorDTO));
 
         if (optional.isEmpty()) {
-            throw new FloorNotFoundException("unable to update floor - "+floorDTO.getFloorId());
+            throw new FloorException(String.format("Unable to Update Floor Details with Associate ID - %d.",floorDTO.getFloorId()));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully updated floor details - "+floorDTO.getFloorId(),
+                String.format("Successfully Updated Floor Details with Associate ID - %d.",floorDTO.getFloorId()),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -86,11 +83,11 @@ public class FloorRestController {
         Optional<FloorDTO> optional = Optional.ofNullable(floorService.saveFloor(floorDTO));
 
         if (optional.isEmpty()) {
-            throw new FloorNotFoundException("unable to save floor details");
+            throw new FloorException("Unable to Save Floor Details.");
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully saved floor details - "+floorDTO.getFloorId(),
+                String.format("Successfully Saved Floor Details with Floor ID - %d.",optional.get().getFloorId()),
                 optional.get()),
                 HttpStatus.OK);
     }
@@ -102,12 +99,12 @@ public class FloorRestController {
         int count = floorService.updateFloorDbStatusById(EntityDbStatus.DELETED,id);
 
         if (count<=0) {
-            throw new FloorNotFoundException("unable to find floor - "+id);
+            throw new FloorException(String.format("Unable to Find Floor with Associate ID - %d.",id));
         }
 
         return new ResponseEntity<>(new ResponseUtil<>(HttpStatus.OK.value(),
-                "successfully deleted floor",
-                "deleted floor - "+id),
+                "Successfully Deleted Floor",
+                String.format("Deleted Floor with Associate ID - %d.",id)),
                 HttpStatus.OK);
     }
 }
