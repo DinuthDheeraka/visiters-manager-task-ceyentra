@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface VisitorCardService {
 
-    List<VisitorCardDTO> readAllVisitorCard();
-
     VisitorCardDTO readVisitorCardById(int id);
 
     VisitorCardDTO saveVisitorCard(VisitorCardDTO visitorCardDTO);

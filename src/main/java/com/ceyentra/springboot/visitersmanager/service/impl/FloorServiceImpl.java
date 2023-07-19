@@ -46,28 +46,13 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public List<FloorDTO> readAllFloors() {
-
-        try {
-            Optional<List<FloorEntity>> all = Optional.of(floorDAO.findAll());
-
-            return modelMapper.map(all.get(),
-                    new TypeToken<ArrayList<FloorDTO>>() {
-                    }.getType());
-
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    @Override
     public FloorDTO updateFloor(FloorDTO floorDTO) {
 
         try {
 
             Optional<FloorDTO> optional = Optional.ofNullable(readFloorById(floorDTO.getFloorId()));
 
-            if (optional.isEmpty()) {
+            if (optional.isEmpty()||optional.get().getEntityDbStatus()==EntityDbStatus.DELETED) {
                 throw new FloorException(String.format("Unable to Update Floor Details with Associate ID - %d", floorDTO.getFloorId()));
             }
 
@@ -82,26 +67,6 @@ public class FloorServiceImpl implements FloorService {
             FloorEntity save = floorDAO.save(modelMapper.map(currentFloorDTO, FloorEntity.class));
 
             return modelMapper.map(save, FloorDTO.class);
-
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    @Override
-    public String deleteFloorById(int id) {
-
-        try {
-
-            Optional<FloorEntity> byId = floorDAO.findById(id);
-
-            if (byId.isEmpty()) {
-                throw new FloorException(String.format("Unable to Find Floor with Associate ID - %d.", id));
-            }
-
-            floorDAO.deleteById(id);
-
-            return "Deleted";
 
         } catch (Exception e) {
             throw e;
@@ -127,17 +92,17 @@ public class FloorServiceImpl implements FloorService {
     }
 
     @Override
-    public int updateFloorDbStatusById(EntityDbStatus status, int id) {
+    public void updateFloorDbStatusById(EntityDbStatus status, int id) {
 
         try{
 
-            int count = floorDAO.setFloorDbStatusById(status.name(), id);
+            Optional<FloorEntity> byId = floorDAO.findById(id);
 
-            if(count<=0){
+            if(byId.isEmpty()||byId.get().getDbStatus()==EntityDbStatus.DELETED){
                 throw new FloorException(String.format("Unable to Find Floor with Associate ID - %d.",id));
             }
 
-            return count;
+            floorDAO.setFloorDbStatusById(status.name(), id);
 
         }catch (Exception e){
             throw e;

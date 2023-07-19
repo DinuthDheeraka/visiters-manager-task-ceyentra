@@ -9,15 +9,11 @@ public interface FloorService {
 
     FloorDTO readFloorById(int id);
 
-    List<FloorDTO> readAllFloors();
-
     FloorDTO updateFloor(FloorDTO floorDTO);
-
-    String deleteFloorById(int id);
 
     FloorDTO saveFloor(FloorDTO floorDTO);
 
-    int updateFloorDbStatusById(EntityDbStatus status,int id);
+    void updateFloorDbStatusById(EntityDbStatus status,int id);
 
     List<FloorDTO> selectFloorsByDbStatus(EntityDbStatus entityDbStatus);
 }

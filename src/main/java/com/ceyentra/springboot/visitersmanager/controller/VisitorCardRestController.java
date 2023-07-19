@@ -32,18 +32,10 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getAllVisitorCards() {
 
-        Optional<List<VisitorCardDTO>> optional = Optional
-                .ofNullable(visitorCardService
-                        .findVisitorCardsByDbStatus(EntityDbStatus.ACTIVE));
-
-        if (optional.isEmpty()) {
-            throw new VisitorCardException("Couldn't find Visitor Cards Details.");
-        }
-
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
                 "Successfully Retrieved Visitor Cards Details",
-                optional.get()),
+                visitorCardService.findVisitorCardsByDbStatus(EntityDbStatus.ACTIVE)),
                 HttpStatus.OK);
     }
 
@@ -51,16 +43,10 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<VisitorCardDTO>> getVisitorCardById(@PathVariable int id) {
 
-        Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.readVisitorCardById(id));
-
-        if (optional.isEmpty() || optional.get().getDbStatus() == EntityDbStatus.DELETED) {
-            throw new VisitorCardException(String.format("Couldn't find Visitor Card with Associate ID - %d", id));
-        }
-
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
                 String.format("Successfully Retrieved Visitor Card details for Associate ID - %d", id),
-                optional.get()),
+                visitorCardService.readVisitorCardById(id)),
                 HttpStatus.OK);
     }
 
@@ -68,16 +54,10 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('receptionist:read')")
     public ResponseEntity<ResponseUtil<List<VisitorCardDTO>>> getVisitorCardsByStatus(@PathVariable VisitorCardStatus status) {
 
-        Optional<List<VisitorCardDTO>> optional = Optional.ofNullable(visitorCardService.readVisitorCardByStatus(status));
-
-        if (optional.isEmpty()) {
-            throw new VisitorCardException(String.format("Couldn't find Visitor Cards with Status - %s", status));
-        }
-
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
                 String.format("Successfully Retrieved Visitor Cards with status - %s", status),
-                optional.get()),
+                visitorCardService.readVisitorCardByStatus(status)),
                 HttpStatus.OK);
     }
 
@@ -85,16 +65,10 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<ResponseUtil<VisitorCardDTO>> updateVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO) {
 
-        Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.updateVisitorCard(visitorCardDTO));
-
-        if (optional.isEmpty()) {
-            throw new VisitorCardException(String.format("Couldn't Update Visitor Card with Associate ID - %d.", visitorCardDTO.getCardId()));
-        }
-
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
                 String.format("Successfully Updated Visitor Card with Given ID - %d.", visitorCardDTO.getCardId()),
-                optional.get()),
+                visitorCardService.updateVisitorCard(visitorCardDTO)),
                 HttpStatus.OK);
     }
 
@@ -102,16 +76,10 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<ResponseUtil<VisitorCardDTO>> addVisitorCard(@RequestBody VisitorCardDTO visitorCardDTO) {
 
-        Optional<VisitorCardDTO> optional = Optional.ofNullable(visitorCardService.saveVisitorCard(visitorCardDTO));
-
-        if (optional.isEmpty()) {
-            throw new VisitorCardException("Couldn't save Visitor Card.");
-        }
-
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
-                String.format("Successfully Saved Visitor Card with ID - %d.",optional.get().getCardId()),
-                optional.get()),
+                String.format("Successfully Saved Visitor Card with ID - %d.",visitorCardDTO.getCardId()),
+                visitorCardService.saveVisitorCard(visitorCardDTO)),
                 HttpStatus.OK);
     }
 
@@ -119,11 +87,7 @@ public class VisitorCardRestController {
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<ResponseUtil<String>> deleteVisitorCardById(@PathVariable int id) {
 
-        int count = visitorCardService.updateVisitorCardDbStatusById(EntityDbStatus.DELETED, id);
-
-        if (count <= 0) {
-            throw new VisitorCardException(String.format("Couldn't find Visitor Card with Associate ID - %d" ,id));
-        }
+        visitorCardService.updateVisitorCardDbStatusById(EntityDbStatus.DELETED, id);
 
         return new ResponseEntity<>(new ResponseUtil<>(
                 HttpStatus.OK.value(),
