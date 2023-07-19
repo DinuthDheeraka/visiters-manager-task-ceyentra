@@ -12,19 +12,15 @@ import java.util.List;
 
 public interface VisitService {
 
-    List<VisitDTO> readAllVisits();
-
     String saveVisit(RequestVisitDTO requestVisitDTO);
 
     VisitDTO readVisitById(int id);
 
-    VisitDTO updateVisitById(RequestVisitDTO httpRequestVisitDTO);
+    void updateVisitById(RequestVisitDTO httpRequestVisitDTO);
 
-    String deleteVisitById(int id);
+    List<VisitDTO> findVisitsByBetweenDays(Long startDate,Long endDate,EntityDbStatus entityDbStatus);
 
-    List<VisitDTO> findVisitsByBetweenDays(String startDate,String endDate,EntityDbStatus entityDbStatus);
-
-    List<VisitDTO> findVisitsUntilGivenDate(String endDate,EntityDbStatus entityDbStatus);
+    List<VisitDTO> findVisitsUntilGivenDate(Long endDate,EntityDbStatus entityDbStatus);
 
     List<VisitDTO> findAllVisitsByDbStatus(EntityDbStatus dbStatus);
 

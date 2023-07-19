@@ -40,6 +40,9 @@ public class VisitEntityDtoConvertor implements CustomConvertor<VisitEntity, Vis
                             visit.getCheckInTime(), visit.getCheckOutTime(),
                             visit.getReason(), visit.getVisitStatus());
 
+                    //set DB status
+                    visitDTO.setDbStatus(visit.getDbStatus());
+
                     //visitorDTO
                     VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
 
