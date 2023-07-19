@@ -4,16 +4,15 @@
  */
 package com.ceyentra.springboot.visitersmanager.service.impl;
 
-import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
-import com.ceyentra.springboot.visitersmanager.exceptions.VisitorException;
-import com.ceyentra.springboot.visitersmanager.repository.VisitorRepository;
-import com.ceyentra.springboot.visitersmanager.dto.FloorDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitDTO;
-import com.ceyentra.springboot.visitersmanager.dto.VisitorCardDTO;
 import com.ceyentra.springboot.visitersmanager.dto.VisitorDTO;
 import com.ceyentra.springboot.visitersmanager.entity.VisitEntity;
 import com.ceyentra.springboot.visitersmanager.entity.VisitorEntity;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
+import com.ceyentra.springboot.visitersmanager.exceptions.VisitorException;
+import com.ceyentra.springboot.visitersmanager.repository.VisitorRepository;
 import com.ceyentra.springboot.visitersmanager.service.VisitorService;
+import com.ceyentra.springboot.visitersmanager.util.convert.CustomConvertor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -33,110 +32,150 @@ public class VisitorServiceImpl implements VisitorService {
 
     private final ModelMapper modelMapper;
 
-    @Override
-    public List<VisitorDTO> readAllVisitors() {
-        return modelMapper.map(visitorDAO.findAll(),
-                new TypeToken<ArrayList<VisitorDTO>>() {
-                }.getType());
-    }
+    private final CustomConvertor<VisitEntity, VisitDTO> convertor;
 
     @Override
     public VisitorDTO saveVisitor(VisitorDTO visitorDTO) {
-        System.out.println(visitorDTO);
-        visitorDTO.setVisitorId(0);
-        VisitorEntity save = visitorDAO.save(modelMapper.map(visitorDTO, VisitorEntity.class));
-        return modelMapper.map(save, VisitorDTO.class);
+
+        try {
+
+            visitorDTO.setVisitorId(0);
+            visitorDTO.setDbStatus(EntityDbStatus.ACTIVE);
+            return modelMapper.map(visitorDAO.save(modelMapper.map(visitorDTO,
+                    VisitorEntity.class)),
+                    VisitorDTO.class);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public VisitorDTO updateVisitor(VisitorDTO visitorDTO) {
 
-        Optional<VisitorDTO> optional = Optional.ofNullable(readVisitorById(visitorDTO.getVisitorId()));
+        try {
 
-        if(optional.isEmpty()){
-            throw new VisitorException("couldn't find visitor - "+visitorDTO.getVisitorId());
+            Optional<VisitorEntity> optional = visitorDAO.findById(visitorDTO.getVisitorId());
+
+            if (optional.isEmpty() || optional.get().getDbStatus() == EntityDbStatus.DELETED) {
+                throw new VisitorException(String.format("Unable to Update Visitor Details for Associate ID - %d.", visitorDTO.getVisitorId()));
+            }
+
+            VisitorDTO currentVisitorDto = modelMapper.map(optional.get(), VisitorDTO.class);
+
+            currentVisitorDto.setFirstName(visitorDTO.getFirstName() == null ?
+                    currentVisitorDto.getFirstName() : visitorDTO.getFirstName());
+
+            currentVisitorDto.setLastName(visitorDTO.getLastName() == null ?
+                    currentVisitorDto.getLastName() : visitorDTO.getLastName());
+
+            currentVisitorDto.setNic(visitorDTO.getNic() == null ?
+                    currentVisitorDto.getNic() : visitorDTO.getNic());
+
+            currentVisitorDto.setPhone(visitorDTO.getPhone() == null ?
+                    currentVisitorDto.getPhone() : visitorDTO.getPhone());
+
+            return modelMapper.map(visitorDAO.save(modelMapper.map(currentVisitorDto,
+                    VisitorEntity.class)),
+                    VisitorDTO.class);
+
+        } catch (Exception e) {
+            throw e;
         }
-
-        VisitorDTO currentVisitorDto = optional.get();
-
-        currentVisitorDto.setFirstName(visitorDTO.getFirstName()==null?
-                currentVisitorDto.getFirstName() : visitorDTO.getFirstName());
-
-        currentVisitorDto.setLastName(visitorDTO.getLastName()==null?
-                currentVisitorDto.getLastName() : visitorDTO.getLastName());
-
-        currentVisitorDto.setNic(visitorDTO.getNic()==null?
-                currentVisitorDto.getNic() : visitorDTO.getNic());
-
-        currentVisitorDto.setPhone(visitorDTO.getPhone()==null?
-                currentVisitorDto.getPhone() : visitorDTO.getPhone());
-
-        VisitorEntity save = visitorDAO.save(modelMapper.map(currentVisitorDto, VisitorEntity.class));
-        return modelMapper.map(save, VisitorDTO.class);
-    }
-
-    @Override
-    public String deleteVisitorById(int id) {
-        Optional<VisitorEntity> visitor = visitorDAO.findById(id);
-        if (visitor.isPresent()) {
-            visitorDAO.deleteById(id);
-            return "deleted visitor - " + id;
-        }
-        return null;
     }
 
     @Override
     public VisitorDTO readVisitorById(int id) {
-        Optional<VisitorEntity> byId = visitorDAO.findById(id);
-        if(byId.isEmpty()){
-            return null;
+
+        try {
+
+            Optional<VisitorEntity> byId = visitorDAO.findById(id);
+
+            if (byId.isEmpty() || byId.get().getDbStatus() == EntityDbStatus.DELETED) {
+                throw new VisitorException(String.format("Couldn't find Visitor with Associate ID - %d.", id));
+            }
+            return modelMapper.map(byId.get(), VisitorDTO.class);
+
+        } catch (Exception e) {
+            throw e;
         }
-        return modelMapper.map(byId.get(), VisitorDTO.class);
     }
 
     @Override
     public VisitorDTO readVisitorByNic(String nic) {
-        return modelMapper.map(visitorDAO.findByNic(nic),VisitorDTO.class);
+
+        try {
+
+            Optional<VisitorEntity> byNic = Optional.ofNullable(visitorDAO.findByNic(nic));
+
+            if (byNic.isEmpty() || byNic.get().getDbStatus() == EntityDbStatus.DELETED) {
+                throw new VisitorException(String.format("Couldn't find Visitor with Associate NIC - %s", nic));
+            }
+
+            return modelMapper.map(visitorDAO.findByNic(nic), VisitorDTO.class);
+
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public List<VisitDTO> readAllVisitsByVisitorId(int id) {
 
-        List<VisitDTO> visitDTOS = new ArrayList();
-        for (VisitEntity visit : visitorDAO.findVisitsByVisitorId(id).getVisitList()) {
+        try {
 
-            //visitDTO
-            VisitDTO visitDTO = new VisitDTO(visit.getVisitId(), visit.getCheckInDate(),
-                    visit.getCheckInTime(), visit.getCheckOutTime(),
-                    visit.getReason(), visit.getVisitStatus());
+            List<VisitDTO> visitorDTOS = new ArrayList<>();
 
-            //visitorDTO
-            VisitorDTO visitorDTO = modelMapper.map(visit.getVisitor(), VisitorDTO.class);
+            Optional<VisitorEntity> byId = visitorDAO.findById(id);
 
-            //visitorCardDTO
-            VisitorCardDTO visitorCardDTO = modelMapper.map(visit.getVisitorCard(), VisitorCardDTO.class);
+            if (byId.isEmpty() || byId.get().getDbStatus() == EntityDbStatus.DELETED) {
+                throw new VisitorException(String.format("Unable to Process.Couldn't find Visitor with Associate ID - %d.", id));
+            }
 
-            //floorDTO
-            FloorDTO floorDTO = modelMapper.map(visit.getFloor(), FloorDTO.class);
 
-            visitDTO.setVisitor(visitorDTO);
-            visitDTO.setVisitorCard(visitorCardDTO);
-            visitDTO.setFloor(floorDTO);
+            Optional<VisitorEntity> visitor = Optional.ofNullable(visitorDAO.findVisitsByVisitorId(id));
 
-            visitDTOS.add(visitDTO);
+            if(visitor.isPresent()){
+                visitorDTOS = convertor.convert(visitor.get().getVisitList());
+            }
+
+            return visitorDTOS;
+
+        } catch (Exception e) {
+            throw e;
         }
-        return visitDTOS;
     }
 
     @Override
     public int updateVisitorDbStatusById(EntityDbStatus status, int id) {
-        return visitorDAO.updateVisitorDbStatusById(status.name(),id);
+
+        try{
+
+            Optional<VisitorEntity> byId = visitorDAO.findById(id);
+
+            if(byId.isEmpty()||byId.get().getDbStatus()==EntityDbStatus.DELETED){
+                throw new VisitorException(String.format("Unable to Process.Couldn't find Visitor with Associate ID - %d.", id));
+            }
+
+            return visitorDAO.updateVisitorDbStatusById(status.name(), id);
+
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     @Override
     public List<VisitorDTO> findVisitorsByDbStatus(EntityDbStatus status) {
-        return modelMapper.map(visitorDAO.findVisitorsByDbStatus(status.name()),
-                new TypeToken<ArrayList<VisitorDTO>>() {
-                }.getType());
+
+        try{
+
+            return modelMapper.map(visitorDAO.findVisitorsByDbStatus(status.name()),
+                    new TypeToken<ArrayList<VisitorDTO>>() {
+                    }.getType());
+
+        }catch (Exception e){
+            throw e;
+        }
     }
 }

@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class A {
 
@@ -43,10 +45,5 @@ public class A {
 //
 //        System.out.println(new Date(milliseconds));
 
-        try {
-            Date d = new Date(null);
-        }catch (Exception e){
-            System.out.println(e);
-        }
     }
 }
