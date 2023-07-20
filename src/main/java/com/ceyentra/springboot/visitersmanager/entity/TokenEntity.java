@@ -4,6 +4,7 @@
  */
 package com.ceyentra.springboot.visitersmanager.entity;
 
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

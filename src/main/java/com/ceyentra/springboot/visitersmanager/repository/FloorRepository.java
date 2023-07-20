@@ -1,6 +1,7 @@
 package com.ceyentra.springboot.visitersmanager.repository;
 
 import com.ceyentra.springboot.visitersmanager.entity.FloorEntity;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,9 +17,6 @@ public interface FloorRepository extends JpaRepository<FloorEntity,Integer> {
     @Modifying
     int setFloorDbStatusById(@Param("db_status") String db_status,@Param("floor_id") int floor_id);
 
-    @Query(value = "SELECT * FROM floor f WHERE f.db_status = :status",nativeQuery = true)
-    List<FloorEntity> selectFloorsByDbStatus(@Param("status")String status);
-
-//    @Query(value = "SELECT db_status FROM floor WHERE floor_id = :id",nativeQuery = true)
-//    String findDbStatusByFloorId(@Param("id") int id);
+    @Query(value = "FROM FloorEntity f WHERE f.dbStatus = :status")
+    List<FloorEntity> selectFloorsByDbStatus(@Param("status") EntityDbStatus status);
 }

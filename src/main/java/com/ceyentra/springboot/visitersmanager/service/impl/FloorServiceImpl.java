@@ -114,7 +114,7 @@ public class FloorServiceImpl implements FloorService {
 
         try{
 
-            Optional<List<FloorEntity>> floorEntities = Optional.ofNullable(floorDAO.selectFloorsByDbStatus(entityDbStatus.name()));
+            Optional<List<FloorEntity>> floorEntities = Optional.ofNullable(floorDAO.selectFloorsByDbStatus(entityDbStatus));
 
             if(floorEntities.isEmpty()){
                 throw new FloorException("There are no any Registered Floors.");

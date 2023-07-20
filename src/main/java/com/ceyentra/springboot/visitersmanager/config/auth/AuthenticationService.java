@@ -1,22 +1,28 @@
 package com.ceyentra.springboot.visitersmanager.config.auth;
 
 import com.ceyentra.springboot.visitersmanager.config.config.JwtService;
+import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.AuthenticationRequestDTO;
 import com.ceyentra.springboot.visitersmanager.dto.request.RegisterRequestDTO;
 import com.ceyentra.springboot.visitersmanager.dto.response.AuthenticationResponseDTO;
 import com.ceyentra.springboot.visitersmanager.entity.TokenEntity;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.enums.TokenType;
 import com.ceyentra.springboot.visitersmanager.exceptions.UserException;
 import com.ceyentra.springboot.visitersmanager.repository.TokenRepository;
 import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
+import com.ceyentra.springboot.visitersmanager.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +35,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final UserService userService;
+
+    private final ModelMapper modelMapper;
+
     private final UserRepository repository;
 
     private final TokenRepository tokenRepository;
@@ -39,23 +49,19 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponseDTO register(RegisterRequestDTO request) {
+    public AuthenticationResponseDTO register(UserDTO request) {
 
-        Optional<UserEntity> byEmail = repository.findByEmail(request.getEmail());
-        if (byEmail.isPresent()) {
-            throw new UserException(String.format("User with this email %s is Already Registered",request.getEmail()));
-        }
-
-        var user = UserEntity.builder()
+        UserEntity user = UserEntity.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
-        var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+
+        UserEntity savedUser = modelMapper.map(userService.saveUser(request),UserEntity.class);
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
@@ -70,10 +76,10 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
+        UserEntity user = userService.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponseDTO.builder()

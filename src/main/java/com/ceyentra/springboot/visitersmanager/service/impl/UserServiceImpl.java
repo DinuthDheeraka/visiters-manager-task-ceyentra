@@ -6,6 +6,8 @@ package com.ceyentra.springboot.visitersmanager.service.impl;
 
 import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
 import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
+import com.ceyentra.springboot.visitersmanager.exceptions.UserException;
 import com.ceyentra.springboot.visitersmanager.repository.UserRepository;
 import com.ceyentra.springboot.visitersmanager.service.TokenService;
 import com.ceyentra.springboot.visitersmanager.service.UserService;
@@ -35,55 +37,119 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
-        userDTO.setId(0);
-        UserEntity save = userRepository.save(modelMapper.map(userDTO, UserEntity.class));
-        return modelMapper.map(save,UserDTO.class);
+
+        try {
+
+            Optional<UserEntity> byEmail = findByEmail(userDTO.getEmail());
+
+            if (byEmail.isPresent()) {
+                throw new UserException(String.format("User with this Email - %s Already Exists.", userDTO.getEmail()));
+            }
+
+            userDTO.setId(0);
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            return modelMapper.map(userRepository.save(modelMapper.map(userDTO,
+                    UserEntity.class)),
+                    UserDTO.class);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public UserDTO updateUser(UserDTO userDTO) {
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        UserEntity save = userRepository.save(modelMapper.map(userDTO, UserEntity.class));
-        return modelMapper.map(save,UserDTO.class);
+
+        try {
+
+            //check user if exists
+            UserDTO currentUserDTO = readUserById(userDTO.getId());
+
+            //check user if exists with given email
+            if (userDTO.getEmail() != null && !(currentUserDTO.getEmail().equals(userDTO.getEmail()))) {
+
+                Optional<UserEntity> byEmail = findByEmail(userDTO.getEmail());
+
+                if (byEmail.isPresent()) {
+                    throw new UserException(String.format("User with this Email - %s Already Exists.", userDTO.getEmail()));
+                }
+            }
+
+            currentUserDTO.setFirstname(userDTO.getFirstname() == null ?
+                    currentUserDTO.getFirstname() : userDTO.getFirstname());
+
+            currentUserDTO.setLastname(userDTO.getLastname() == null ?
+                    currentUserDTO.getLastname() : userDTO.getLastname());
+
+            currentUserDTO.setPassword(userDTO.getPassword() == null ?
+                    currentUserDTO.getPassword() : passwordEncoder.encode(userDTO.getPassword()));
+
+            currentUserDTO.setEmail(userDTO.getEmail() == null ?
+                    currentUserDTO.getEmail() : userDTO.getEmail());
+
+            currentUserDTO.setRole(userDTO.getRole() == null ?
+                    currentUserDTO.getRole() : userDTO.getRole());
+
+            return modelMapper.map(userRepository.save(modelMapper.map(userDTO,
+                    UserEntity.class)),
+                    UserDTO.class);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public String deleteUserById(int id) {
-        Optional<UserEntity> byId = userRepository.findById(id);
-        if(byId.isPresent()){
+    public void deleteUserById(int id) {
+
+        try {
+            readUserById(id);
             tokenService.deleteTokenByUserId(id);
             userRepository.deleteById(id);
-            return  "user "+id+" deleted";
+
+        } catch (Exception e) {
+            throw e;
         }
-        return null;
     }
 
     @Override
     public UserDTO readUserById(int id) {
-        Optional<UserEntity> byId = userRepository.findById(id);
-        if(byId.isPresent()){
-            return modelMapper.map(byId,UserDTO.class);
+
+        try {
+
+            Optional<UserEntity> byId = userRepository.findById(id);
+
+            if (byId.isEmpty()) {
+                throw new UserException(String.format("Unable to find User with Associate ID - %d", id));
+            }
+
+            return modelMapper.map(byId, UserDTO.class);
+
+        } catch (Exception e) {
+            throw e;
         }
-        return null;
     }
 
     @Override
-    public List<UserDTO> readAllUsers() {
+    public List<UserDTO> readAllUsersByDbStatus(EntityDbStatus dbStatus) {
 
-        Optional<List<UserEntity>> optionalUserEntities = Optional.ofNullable(
-                userRepository.findAll());
-
-        if(optionalUserEntities.isPresent()){
-            return modelMapper.map(optionalUserEntities.get(),
+        try {
+            return modelMapper.map(userRepository.findAll(),
                     new TypeToken<ArrayList<UserDTO>>() {
                     }.getType());
-        }
 
-        return null;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public Optional<UserEntity> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+
+        try {
+            return userRepository.findByEmail(email);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

@@ -55,7 +55,6 @@ public class JwtService {
       hashMap.put("First Name",user.get().getFirstname());
       hashMap.put("Last Name",user.get().getLastname());
       hashMap.put("Email",user.get().getEmail());
-      hashMap.put("Password",user.get().getPassword());
       hashMap.put("Role",user.get().getRole());
     }
 
@@ -79,7 +78,6 @@ public class JwtService {
       hashMap.put("First Name",user.get().getFirstname());
       hashMap.put("Last Name",user.get().getLastname());
       hashMap.put("Email",user.get().getEmail());
-      hashMap.put("Password",user.get().getPassword());
       hashMap.put("Role",user.get().getRole());
     }
 

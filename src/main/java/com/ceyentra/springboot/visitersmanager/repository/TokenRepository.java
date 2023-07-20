@@ -1,6 +1,8 @@
 package com.ceyentra.springboot.visitersmanager.repository;
 
 import com.ceyentra.springboot.visitersmanager.entity.TokenEntity;
+import com.ceyentra.springboot.visitersmanager.entity.UserEntity;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

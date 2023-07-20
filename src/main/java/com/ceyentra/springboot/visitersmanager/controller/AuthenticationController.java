@@ -1,9 +1,8 @@
 package com.ceyentra.springboot.visitersmanager.controller;
 
+import com.ceyentra.springboot.visitersmanager.config.auth.AuthenticationService;
 import com.ceyentra.springboot.visitersmanager.dto.request.AuthenticationRequestDTO;
 import com.ceyentra.springboot.visitersmanager.dto.response.AuthenticationResponseDTO;
-import com.ceyentra.springboot.visitersmanager.config.auth.AuthenticationService;
-import com.ceyentra.springboot.visitersmanager.dto.request.RegisterRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +19,15 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-  private final AuthenticationService service;
+    private final AuthenticationService service;
 
-  @PostMapping("/register")
-  public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody RegisterRequestDTO request) {
-    return ResponseEntity.ok(service.register(request));
-  }
-  @PostMapping("/authenticate")
-  public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request) {
-    return ResponseEntity.ok(service.authenticate(request));
-  }
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request) {
+        return ResponseEntity.ok(service.authenticate(request));
+    }
 
-  @PostMapping("/refresh-token")
-  public void refreshToken(
-      HttpServletRequest request,
-      HttpServletResponse response
-  ) throws IOException {
-    service.refreshToken(request, response);
-  }
-
-
+    @PostMapping("/refresh-token")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        service.refreshToken(request, response);
+    }
 }

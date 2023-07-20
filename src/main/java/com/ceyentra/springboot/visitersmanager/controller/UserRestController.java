@@ -4,10 +4,14 @@
  */
 package com.ceyentra.springboot.visitersmanager.controller;
 
+import com.ceyentra.springboot.visitersmanager.config.auth.AuthenticationService;
 import com.ceyentra.springboot.visitersmanager.dto.UserDTO;
+import com.ceyentra.springboot.visitersmanager.dto.response.AuthenticationResponseDTO;
+import com.ceyentra.springboot.visitersmanager.enums.EntityDbStatus;
 import com.ceyentra.springboot.visitersmanager.exceptions.UserException;
 import com.ceyentra.springboot.visitersmanager.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,40 +22,44 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/api/v1/_users")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class UserRestController {
 
     private final UserService userService;
 
-    @Autowired
-    public UserRestController(UserService userService) {
-        this.userService = userService;
+    private final AuthenticationService service;
+
+    @PostMapping("/register")
+    @PreAuthorize("hasAuthority('admin:create')")
+    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody UserDTO request) {
+        return ResponseEntity.ok(service.register(request));
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<UserDTO> getAllUsers(){
-        return userService.readAllUsers();
+    public List<UserDTO> getAllUsers() {
+        return userService.readAllUsersByDbStatus(EntityDbStatus.ACTIVE);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:read')")
-    public UserDTO getUserById(@PathVariable int id){
+    public UserDTO getUserById(@PathVariable int id) {
         Optional<UserDTO> optional = Optional.ofNullable(userService.readUserById(id));
-        if(optional.isEmpty()){
-            throw new UserException("user with id -"+id+" not found");
+        if (optional.isEmpty()) {
+            throw new UserException("user with id -" + id + " not found");
         }
         return optional.get();
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('admin:update')")
-    public UserDTO updateUser(@RequestBody UserDTO userDTO){
+    public UserDTO updateUser(@RequestBody UserDTO userDTO) {
         return userService.updateUser(userDTO);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('admin:delete')")
-    public String deleteUserById(@PathVariable int id){
-        return userService.deleteUserById(id);
+    public void deleteUserById(@PathVariable int id) {
+        userService.deleteUserById(id);
     }
 }
